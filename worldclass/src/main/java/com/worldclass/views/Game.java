@@ -65,7 +65,7 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
                 Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.soccer_ball);
                 ball = new Ball(startX,startY,radius,true,ballBitmap);
                 obsticles = new Obsticles(getWidth(), getHeight());
-                floor = new Floor();
+                floor = new Floor(radius*2);
 
                 if(gameLoopThread != null && !gameLoopThread.isRunning()){
                     gameLoopThread.setRunning(true);
@@ -93,8 +93,8 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
             canvas.drawColor(0, PorterDuff.Mode.CLEAR);
             if(floor != null)
                 floor.draw(canvas);
-            if(obsticles != null)
-                obsticles.draw(canvas);
+            //if(obsticles != null)
+            //    obsticles.draw(canvas);
             if(ball != null)
                 ball.draw(canvas);
         }

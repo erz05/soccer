@@ -2,10 +2,7 @@ package com.worldclass.objects;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 
 /**
  * Created by erz on 2/19/14.
@@ -43,8 +40,14 @@ public class Ball {
         t=t+dt;
         veloY = veloY+accY*dt*weight;
         y += veloY;
-        if(y > height-diameter-50){
-            y = height-diameter-50;
+        if(y > height-diameter-radius){
+            y = height-diameter-radius;
+        }
+
+        if(y < 0){
+            y = 0;
+            veloY = 0;
+            t = 0;
         }
 
         rotate += 3;

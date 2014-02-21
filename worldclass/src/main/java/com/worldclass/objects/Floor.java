@@ -9,13 +9,15 @@ import android.graphics.Paint;
  */
 public class Floor {
 
+    private int height;
     private Paint paint;
 
-    public Floor(){
+    public Floor(int height){
+        this.height = height;
         paint = new Paint();
         paint.setStrokeWidth(1);
         paint.setAntiAlias(true);
-        paint.setColor(Color.GREEN);
+        paint.setColor(Color.parseColor("#A4C739"));
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
     }
 
@@ -25,6 +27,6 @@ public class Floor {
 
     public void draw(Canvas canvas){
         update();
-        canvas.drawRect(0,canvas.getHeight()-100,canvas.getWidth(),canvas.getHeight(),paint);
+        canvas.drawRect(0,canvas.getHeight()-height,canvas.getWidth(),canvas.getHeight(),paint);
     }
 }
