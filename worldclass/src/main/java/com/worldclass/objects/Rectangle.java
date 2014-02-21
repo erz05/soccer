@@ -10,27 +10,28 @@ import android.graphics.RectF;
 public class Rectangle {
 
     public float x,y,width,height;
-    public int color;
+    public int color, type;
     private Paint paint;
 
-    public Rectangle(float x, float y, float width, float height, int color){
+    public Rectangle(float x, float y, float width, float height, int color, int type){
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.color = color;
+        this.type = type;
 
         paint = new Paint();
-        paint.setStrokeWidth(5);
+        paint.setStrokeWidth(1);
         paint.setAntiAlias(true);
         paint.setColor(color);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
     }
 
     public void update(int width){
-        x -= 15;
-        if(x < -width+400){
-            x = width+400;
+        x -= 10;
+        if(x < -width*2){
+            x = width*2;
         }
     }
 

@@ -4,11 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -17,7 +14,6 @@ import android.view.SurfaceView;
 import com.worldclass.R;
 import com.worldclass.objects.Ball;
 import com.worldclass.objects.Floor;
-import com.worldclass.objects.Obsticles;
 import com.worldclass.utils.GameLoopThread;
 
 /**
@@ -28,7 +24,6 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     private SurfaceHolder holder;
     private GameLoopThread gameLoopThread;
     private Ball ball;
-    private Obsticles obsticles;
     private Floor floor;
     private GestureDetector detector;
 
@@ -64,7 +59,6 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
 
                 Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.soccer_ball);
                 ball = new Ball(startX,startY,radius,true,ballBitmap);
-                obsticles = new Obsticles(getWidth(), getHeight());
                 floor = new Floor(radius*2);
 
                 if(gameLoopThread != null && !gameLoopThread.isRunning()){
@@ -93,8 +87,6 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
             canvas.drawColor(0, PorterDuff.Mode.CLEAR);
             if(floor != null)
                 floor.draw(canvas);
-            //if(obsticles != null)
-            //    obsticles.draw(canvas);
             if(ball != null)
                 ball.draw(canvas);
         }
