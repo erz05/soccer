@@ -1,8 +1,10 @@
 package com.worldclass.objects;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.Log;
 
 /**
@@ -13,9 +15,8 @@ public class Ball {
     public float x;
     public float y;
     public int radius;
+    public int diameter;
     public boolean alive;
-    private Paint ballPaint;
-    private Paint floorPaint;
     private float gravity = 9.81f;
     private float weight = 2;
     private float accY = gravity;
@@ -23,45 +24,42 @@ public class Ball {
     private float dt = 0.03f;
     private float t = 0;
     private boolean falling = true;
+    private Bitmap ballBitmap;
+    private RectF ballRect;
+    private int rotate = 0;
 
-    public Ball(float x, float y, int radius, boolean alive){
+    public Ball(float x, float y, int radius, boolean alive, Bitmap ballBitmap){
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.alive = alive;
+        this.ballBitmap = ballBitmap;
+        this.diameter = radius * 2;
 
-        ballPaint = new Paint();
-        ballPaint.setStrokeWidth(1);
-        ballPaint.setAntiAlias(true);
-        ballPaint.setColor(Color.RED);
-        ballPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-
-        floorPaint = new Paint();
-        floorPaint.setStrokeWidth(1);
-        floorPaint.setAntiAlias(true);
-        floorPaint.setColor(Color.WHITE);
-        floorPaint.setStyle(Paint.Style.STROKE);
+        ballRect = new RectF();
     }
 
     private void update(int height){
         t=t+dt;
         veloY = veloY+accY*dt*weight;
         y += veloY;
-        if(y > height-radius-50){
-            y = height-radius-50;
+        if(y > height-diameter-50){
+            y = height-diameter-50;
         }
 
+        rotate += 3;
+        rotate = rotate % 360;
     }
 
     public void draw(Canvas canvas){
         update(canvas.getHeight());
-        canvas.drawCircle(x, y, radius, ballPaint);
-        canvas.drawLine(0, canvas.getHeight()-50, canvas.getWidth(), canvas.getHeight()-50, floorPaint);
+        ballRect.set(x, y, x + diameter, y + diameter);
+        canvas.rotate(rotate,ballRect.centerX(),ballRect.centerY());
+        canvas.drawBitmap(ballBitmap, null, ballRect, null);
     }
 
     public void jump(){
         t = 0;
         veloY = -10;
-        Log.v("DELETE_THIS", "jump");
     }
 }
