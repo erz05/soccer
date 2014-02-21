@@ -21,9 +21,9 @@ public class Obsticles {
         Rectangle rectangle;
         int start = width + spacingX;
         for(int i=0; i<5; i++){
-            rectangle = new Rectangle(start, 0, w, topHeights[i], Color.GREEN);
+            rectangle = new Rectangle(start, 0, w, topHeights[i], Color.WHITE);
             rectangles.add(rectangle);
-            rectangle = new Rectangle(start, topHeights[i]+spacing, w, height-topHeights[i]-spacing-50, Color.GREEN);
+            rectangle = new Rectangle(start, topHeights[i]+spacing, w, height-topHeights[i]-spacing-50, Color.WHITE);
             rectangles.add(rectangle);
             start += spacingX;
         }

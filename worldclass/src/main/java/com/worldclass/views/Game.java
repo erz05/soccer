@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -27,11 +30,12 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     private Ball ball;
     private Obsticles obsticles;
     private Floor floor;
-    private Paint paint;
     private GestureDetector detector;
 
     public Game(Context context) {
         super(context);
+        setZOrderOnTop(true);
+        getHolder().setFormat(PixelFormat.TRANSPARENT);
         gameLoopThread = new GameLoopThread(this);
         holder = getHolder();
         holder.addCallback(new SurfaceHolder.Callback() {
@@ -75,12 +79,6 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
             }
         });
 
-        paint = new Paint();
-        paint.setStrokeWidth(1);
-        paint.setAntiAlias(true);
-        paint.setColor(Color.RED);
-        paint.setStyle(Paint.Style.FILL_AND_STROKE);
-
         detector = new GestureDetector(context, this);
     }
 
@@ -92,7 +90,7 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     @Override
     public void onDraw(Canvas canvas){
         if(canvas != null){
-            canvas.drawColor(Color.BLACK);
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
             if(floor != null)
                 floor.draw(canvas);
             if(obsticles != null)

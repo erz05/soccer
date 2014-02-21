@@ -15,8 +15,8 @@ public class Floor {
         paint = new Paint();
         paint.setStrokeWidth(1);
         paint.setAntiAlias(true);
-        paint.setColor(Color.WHITE);
-        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.GREEN);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
     }
 
     public void update(){
@@ -25,6 +25,6 @@ public class Floor {
 
     public void draw(Canvas canvas){
         update();
-        canvas.drawLine(0, canvas.getHeight()-100, canvas.getWidth(), canvas.getHeight()-100, paint);
+        canvas.drawRect(0,canvas.getHeight()-100,canvas.getWidth(),canvas.getHeight(),paint);
     }
 }
