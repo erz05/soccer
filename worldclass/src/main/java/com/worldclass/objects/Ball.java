@@ -24,14 +24,16 @@ public class Ball {
     private Bitmap ballBitmap;
     private RectF ballRect;
     private int rotate = 0;
+    private int jumpHeight;
 
-    public Ball(float x, float y, int radius, boolean alive, Bitmap ballBitmap){
+    public Ball(float x, float y, int radius, boolean alive, Bitmap ballBitmap, int jumpHeight){
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.alive = alive;
         this.ballBitmap = ballBitmap;
         this.diameter = radius * 2;
+        this.jumpHeight = jumpHeight;
 
         ballRect = new RectF();
     }
@@ -63,6 +65,6 @@ public class Ball {
 
     public void jump(){
         t = 0;
-        veloY = -10;
+        veloY = -jumpHeight;
     }
 }

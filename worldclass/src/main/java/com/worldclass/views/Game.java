@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -53,12 +54,14 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 //create stuff here
+
                 int radius = getHeight()/20;
                 int startX = getWidth()/10;
                 int startY = getHeight()/20;
+                int jumpHeight = getHeight()/44;
 
                 Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.soccer_ball);
-                ball = new Ball(startX,startY,radius,true,ballBitmap);
+                ball = new Ball(startX,startY,radius,true,ballBitmap,jumpHeight);
                 floor = new Floor(radius*2);
 
                 if(gameLoopThread != null && !gameLoopThread.isRunning()){
