@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -13,6 +14,7 @@ import android.view.SurfaceView;
 
 import com.worldclass.R;
 import com.worldclass.objects.Ball;
+import com.worldclass.objects.Cards;
 import com.worldclass.objects.Floor;
 import com.worldclass.utils.GameLoopThread;
 
@@ -25,6 +27,7 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     private GameLoopThread gameLoopThread;
     private Ball ball;
     private Floor floor;
+    private Cards cards;
     private GestureDetector detector;
 
     public Game(Context context) {
@@ -59,14 +62,12 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
                 int startY = getHeight()/20;
                 int jumpHeight = getHeight()/44;
 
+                Log.v("DELETE_THIS", "jump = "+jumpHeight);
+
                 Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.soccer_ball);
                 ball = new Ball(startX,startY,radius,true,ballBitmap,jumpHeight);
                 floor = new Floor(radius*2);
-
-                if(gameLoopThread != null && !gameLoopThread.isRunning()){
-                    gameLoopThread.setRunning(true);
-                    gameLoopThread.start();
-                }
+                cards = new Cards(getWidth(), getHeight(), radius, radius*2);
             }
 
             @Override
@@ -89,6 +90,8 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
             canvas.drawColor(0, PorterDuff.Mode.CLEAR);
             if(floor != null)
                 floor.draw(canvas);
+            if(cards != null)
+                cards.draw(canvas);
             if(ball != null)
                 ball.draw(canvas);
         }
@@ -129,5 +132,40 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     @Override
     public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent2, float v, float v2) {
         return false;
+    }
+
+    public void start(){
+        if(gameLoopThread == null){
+            gameLoopThread = new GameLoopThread(this);
+        }
+        if(gameLoopThread != null && !gameLoopThread.isRunning()){
+            gameLoopThread.setRunning(true);
+            gameLoopThread.start();
+        }
+    }
+
+    public void pause() {
+        if(gameLoopThread != null && gameLoopThread.isRunning()){
+            gameLoopThread.setRunning(false);
+            boolean retry = true;
+            while (retry) {
+                try {
+                    gameLoopThread.join();
+                    retry = false;
+                } catch (InterruptedException e) {
+                }
+            }
+            gameLoopThread = null;
+        }
+    }
+
+    public void resume(){
+        if(gameLoopThread == null){
+            gameLoopThread = new GameLoopThread(this);
+        }
+        if(gameLoopThread != null && !gameLoopThread.isRunning()){
+            gameLoopThread.setRunning(true);
+            gameLoopThread.start();
+        }
     }
 }

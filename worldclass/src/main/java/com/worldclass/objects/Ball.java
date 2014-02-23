@@ -3,6 +3,7 @@ package com.worldclass.objects;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
+import android.util.Log;
 
 /**
  * Created by erz on 2/19/14.
@@ -20,7 +21,6 @@ public class Ball {
     private float veloY = 0;
     private float dt = 0.03f;
     private float t = 0;
-    private boolean falling = true;
     private Bitmap ballBitmap;
     private RectF ballRect;
     private int rotate = 0;
@@ -40,7 +40,7 @@ public class Ball {
 
     private void update(int height){
         t=t+dt;
-        veloY = veloY+accY*dt*weight;
+        veloY = veloY+(accY*dt*weight);
         y += veloY;
         if(y > height-diameter-radius){
             y = height-diameter-radius;
@@ -65,6 +65,7 @@ public class Ball {
 
     public void jump(){
         t = 0;
-        veloY = -jumpHeight;
+        veloY = -10;
+        Log.v("DELETE_THIS", "velo = "+veloY);
     }
 }

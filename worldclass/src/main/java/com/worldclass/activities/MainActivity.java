@@ -14,7 +14,8 @@ import com.worldclass.views.Menu;
 public class MainActivity extends Activity implements MenuListener {
     private Game game;
     private Menu menu;
-    private boolean pause = true;
+    private boolean paused = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,17 +31,37 @@ public class MainActivity extends Activity implements MenuListener {
     }
 
     @Override
+    public void onBackPressed(){
+        if(paused){
+            super.onBackPressed();
+        }else {
+            if(game != null){
+                game.pause();
+                paused = true;
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        game = null;
+        menu = null;
+    }
+
+    @Override
     public boolean  onTouchEvent (MotionEvent event){
-        if(!pause && game != null)
+        if(!paused && game != null)
             game.onTouchEvent(event);
         return false;
     }
 
     @Override
     public void onPlay() {
-        pause = false;
+        paused = false;
         LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
         mainLayout.removeView(menu);
         mainLayout.addView(game);
+        game.start();
     }
 }
