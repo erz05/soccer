@@ -2,18 +2,18 @@ package com.worldclass.utils;
 
 import android.graphics.Canvas;
 
-import com.worldclass.views.MyGLSurfaceView;
+import com.worldclass.views.Background;
 
 /**
- * Created by erz on 2/20/14.
+ * Created by erz on 2/22/14.
  */
-public class GameLoop extends Thread {
+public class BackgroundLoopThread extends Thread {
     static final long FPS = 60;
-    private MyGLSurfaceView myGLSurfaceView;
+    private Background background;
     private boolean running = false;
 
-    public GameLoop(MyGLSurfaceView myGLSurfaceView){
-        this.myGLSurfaceView = myGLSurfaceView;
+    public BackgroundLoopThread(Background background){
+        this.background = background;
     }
 
     public void setRunning(boolean run){
@@ -33,14 +33,13 @@ public class GameLoop extends Thread {
             Canvas c = null;
             startTime = System.currentTimeMillis();
             try {
-                //c = myGLSurfaceView.getHolder().lockCanvas();
-                synchronized (myGLSurfaceView.getHolder()) {
-                    //myGLSurfaceView.onDraw(c);
-                    myGLSurfaceView.update();
+                c = background.getHolder().lockCanvas();
+                synchronized (background.getHolder()) {
+                    background.onDraw(c);
                 }
             } finally {
                 if (c != null) {
-                    myGLSurfaceView.getHolder().unlockCanvasAndPost(c);
+                    background.getHolder().unlockCanvasAndPost(c);
                 }
             }
             sleepTime = ticksPS-(System.currentTimeMillis() - startTime);
