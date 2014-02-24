@@ -13,6 +13,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.worldclass.R;
+import com.worldclass.listeners.GameListener;
 import com.worldclass.objects.Ball;
 import com.worldclass.objects.Cards;
 import com.worldclass.objects.Floor;
@@ -29,6 +30,8 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     private Floor floor;
     private Cards cards;
     private GestureDetector detector;
+    private GameListener gameListener;
+    private int canvasH, canvasW;
 
     public Game(Context context) {
         super(context);
@@ -77,6 +80,8 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
         });
 
         detector = new GestureDetector(context, this);
+        canvasH = getHeight();
+        canvasW = getWidth();
     }
 
     @Override
@@ -88,13 +93,17 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     public void onDraw(Canvas canvas){
         if(canvas != null){
             canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-            if(floor != null)
-                floor.draw(canvas);
+            //if(floor != null)
+            //    floor.draw(canvas);
             if(cards != null)
                 cards.draw(canvas);
             if(ball != null)
                 ball.draw(canvas);
         }
+    }
+
+    public void setGameListener(GameListener gameListener){
+        this.gameListener = gameListener;
     }
 
     @Override
@@ -115,7 +124,11 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
 
     @Override
     public boolean onSingleTapUp(MotionEvent motionEvent) {
-        ball.jump();
+        Log.v("DELETE","sigleTap = "+getHeight());
+        if(gameListener != null)
+            ball.jump(gameListener.getAngle(),getHeight());
+        else
+            ball.jump(0,getHeight());
         return false;
     }
 
