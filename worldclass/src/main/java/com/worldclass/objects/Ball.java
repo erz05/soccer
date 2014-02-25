@@ -22,14 +22,15 @@ public class Ball {
     private float accY = gravity;
     private float veloY = 10;
     private float veloX = 0;
-    //private float dt = 0.03f;
-    //private float t = 0;
+    private float dt = 0.03f;
+    private float t = 0;
     private Bitmap ballBitmap;
     private RectF ballRect;
     private int rotate = 0;
     private int jumpHeight;
     private Paint player;
     private int playerH, playerW;
+    boolean goingup = false;
 
     public Ball(float x, float y, int radius, boolean alive, Bitmap ballBitmap, int jumpHeight){
         this.x = x;
@@ -53,29 +54,37 @@ public class Ball {
     }
 
     private void update(int width, int height){
-        //t=t+dt;
-        //veloY = veloY+(accY*dt*weight);
+        if(!goingup){
+            t=t+dt;
+            veloY = veloY+(accY*dt*weight);
+        }
         y += veloY;
         if(y > height-diameter-radius){
             y = height-diameter-radius;
             veloX = 0;
+            goingup = false;
         }
 
         if(y < 0){
             y = 0;
             veloY = 10;
-            //t = 0;
+            t = 0;
+            goingup = false;
         }
 
         x += veloX;
         if(x > width-diameter){
             x = width-diameter;
             veloX = - veloX;
+            //veloY = 10;
+            goingup = false;
         }
 
         if(x < 0){
             x = 0;
+            //veloY = 10;
             veloX = -veloX;
+            goingup = false;
         }
 
         rotate += 3;
@@ -85,7 +94,7 @@ public class Ball {
     public void draw(Canvas canvas){
         update(canvas.getWidth(), canvas.getHeight());
 
-        canvas.drawRect(x,canvas.getHeight()-radius-playerH,x+playerW,canvas.getHeight()-radius,player);
+        //canvas.drawRect(x,canvas.getHeight()-radius-playerH,x+playerW,canvas.getHeight()-radius,player);
 
         ballRect.set(x, y, x + diameter, y + diameter);
         canvas.rotate(rotate,ballRect.centerX(),ballRect.centerY());
@@ -94,7 +103,9 @@ public class Ball {
 
     public void jump(int angle, int canvasH){
         Log.v("DELETE_THIS", "y = "+y+", canvasH = "+canvasH);
-        if(y>canvasH-radius-playerH){
+        //if(y>canvasH-radius-playerH){
+
+        goingup = false;
             int ax = (angle + 180) % 360;
 
     //        int ax = 270;
@@ -115,6 +126,46 @@ public class Ball {
             //veloX = +3;
             //t = 0;
             veloY = -10;
+        //}
+    }
+
+    public void fling(int angle) {
+
+//        if(angle>-135&&angle<-45){
+//            veloY = -20;
+//            goingup = true;
+//        }
+
+//        if(angle<-135 && angle>-180 || angle>135&& angle<180){
+//            veloX = -20;
+//            goingup = true;
+//        }
+//
+////        if(angle<135 && angle > 45){
+////            veloY = 20;
+////            goingup = true;
+////        }
+//
+//        if(angle>-45 && angle<0 || angle<45 && angle>0){
+//            veloX = 20;
+//            goingup = true;
+//        }
+
+        if(!goingup){
+            if((angle>-180 && angle<-90) || (angle<180 && angle>90)){
+                veloX = -30;
+                goingup = true;
+            }
+
+            if((angle>-90 && angle<0) || (angle<90 && angle>0)){
+                veloX = 30;
+                goingup = true;
+            }
+
+            veloY = 0;
         }
+        Log.v("DELETE_THIS", "****** = "+angle);
+//        veloX = 10;
+//        veloY = -20;
     }
 }

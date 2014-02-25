@@ -32,6 +32,7 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     private GestureDetector detector;
     private GameListener gameListener;
     private int canvasH, canvasW;
+    boolean goingup = false;
 
     public Game(Context context) {
         super(context);
@@ -144,6 +145,14 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
 
     @Override
     public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent2, float v, float v2) {
+
+        Log.v("DELETE_THIS", "asdf = "+motionEvent.getX()+", "+motionEvent2.getX());
+
+        if(ball != null){
+            double xDiff = motionEvent2.getX() - motionEvent.getX();
+            double yDiff = motionEvent2.getY() - motionEvent.getY();
+            ball.fling((int)Math.toDegrees(Math.atan2(yDiff, xDiff)));
+        }
         return false;
     }
 
