@@ -19,16 +19,16 @@ public class Cards {
         Random random = new Random();
         int spacing, y;
         Rectangle rectangle;
-        for(int i=0; i<3; i++){
-            spacing = random.nextInt(w-100)+100;
-            y = random.nextInt((h-cardH));
-            rectangle = new Rectangle(w+spacing,y,cardW,cardH, Color.RED, TYPE_RED);
-            rectangles.add(rectangle);
-            spacing = random.nextInt(w-100)+100;
-            y = random.nextInt((h-cardH));
-            rectangle = new Rectangle(w+spacing,y,cardW,cardH, Color.YELLOW, TYPE_YELLOW);
-            rectangles.add(rectangle);
-        }
+//        for(int i=0; i<3; i++){
+//            spacing = random.nextInt(w-100)+100;
+//            y = random.nextInt((h-cardH));
+//            rectangle = new Rectangle(w+spacing,y,cardW,cardH, Color.RED, TYPE_RED);
+//            rectangles.add(rectangle);
+//            spacing = random.nextInt(w-100)+100;
+//            y = random.nextInt((h-cardH));
+//            rectangle = new Rectangle(w+spacing,y,cardW,cardH, Color.YELLOW, TYPE_YELLOW);
+//            rectangles.add(rectangle);
+//        }
     }
 
     public void draw(Canvas canvas){

@@ -1,8 +1,8 @@
 package com.worldclass.objects;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+
+import java.util.LinkedList;
 
 /**
  * Created by erz on 2/21/14.
@@ -10,15 +10,28 @@ import android.graphics.Paint;
 public class Floor {
 
     private int height;
-    private Paint paint;
+    private int width;
+    private LinkedList<Rectangle> yards;
+    private boolean moving = false;
 
-    public Floor(int height){
+    public Floor(int height, int width){
         this.height = height;
-        paint = new Paint();
-        paint.setStrokeWidth(1);
-        paint.setAntiAlias(true);
-        paint.setColor(Color.parseColor("#A4C739"));
-        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        this.width = width;
+
+        yards = new LinkedList<Rectangle>();
+
+        int yardHeight = height/10;
+        Rectangle rectangle;
+        int posy = height;
+        for(int i=0; i<11; i++){
+            if(i == 9){
+                rectangle = new Rectangle(0,posy,width,yardHeight,true,i+1);
+            }else {
+                rectangle = new Rectangle(0,posy,width,yardHeight,false,i+1);
+            }
+            yards.add(rectangle);
+            posy -= yardHeight;
+        }
     }
 
     public void update(){
@@ -27,6 +40,17 @@ public class Floor {
 
     public void draw(Canvas canvas){
         update();
-        canvas.drawRect(0,canvas.getHeight()-height,canvas.getWidth(),canvas.getHeight(),paint);
+
+        for(Rectangle rectangle: yards){
+            if(moving)
+                rectangle.fling();
+            rectangle.draw(canvas);
+        }
+        moving = false;
+    }
+
+    public void fling(){
+        if(!moving)
+            moving = true;
     }
 }

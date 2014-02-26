@@ -11,12 +11,15 @@ import android.widget.LinearLayout;
 import com.worldclass.R;
 import com.worldclass.listeners.GameListener;
 import com.worldclass.listeners.MenuListener;
+import com.worldclass.listeners.PauseListener;
 import com.worldclass.views.Game;
 import com.worldclass.views.Menu;
+import com.worldclass.views.Pause;
 
-public class MainActivity extends Activity implements MenuListener, GameListener {
+public class MainActivity extends Activity implements MenuListener, GameListener, PauseListener {
     private Game game;
     private Menu menu;
+    private Pause pauseView;
     private boolean paused = true;
     private OrientationEventListener orientationEventListener;
     private int orientation = 0;
@@ -42,6 +45,9 @@ public class MainActivity extends Activity implements MenuListener, GameListener
                 //Log.v("DELETE_THIS", "i = "+i);
             }
         };
+
+        pauseView = new Pause(this);
+        pauseView.setListener(this);
     }
 
     @Override
@@ -52,6 +58,10 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             if(game != null){
                 game.pause();
                 paused = true;
+                LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
+                if(pauseView != null){
+                    mainLayout.addView(pauseView);
+                }
             }
         }
     }
@@ -95,5 +105,21 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     @Override
     public int getAngle() {
         return orientation;
+    }
+
+    @Override
+    public void onGameResume() {
+        if(game != null){
+            game.resume();
+        }
+        if(pauseView != null){
+            LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
+            mainLayout.removeView(pauseView);
+        }
+    }
+
+    @Override
+    public void onGameQuit() {
+        onBackPressed();
     }
 }

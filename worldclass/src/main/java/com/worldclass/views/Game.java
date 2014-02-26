@@ -15,24 +15,28 @@ import android.view.SurfaceView;
 import com.worldclass.R;
 import com.worldclass.listeners.GameListener;
 import com.worldclass.objects.Ball;
-import com.worldclass.objects.Cards;
 import com.worldclass.objects.Floor;
 import com.worldclass.utils.GameLoopThread;
 
 /**
  * Created by erz on 2/19/14.
  */
-public class Game extends SurfaceView implements GestureDetector.OnGestureListener {
+public class Game extends SurfaceView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     private SurfaceHolder holder;
     private GameLoopThread gameLoopThread;
     private Ball ball;
     private Floor floor;
-    private Cards cards;
+    //private Cards cards;
     private GestureDetector detector;
     private GameListener gameListener;
     private int canvasH, canvasW;
     boolean goingup = false;
+
+    private float initX, initY;
+
+    public final static int MOVE_LEFT = 0;
+    public final static int MOVE_RIGHT = 1;
 
     public Game(Context context) {
         super(context);
@@ -68,10 +72,13 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
 
                 Log.v("DELETE_THIS", "jump = "+jumpHeight);
 
+                int newX = getWidth()/2 - radius;
+                int newY = getHeight()/2 - radius;
+
                 Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.soccer_ball);
-                ball = new Ball(startX,startY,radius,true,ballBitmap,jumpHeight);
-                floor = new Floor(radius*2);
-                cards = new Cards(getWidth(), getHeight(), radius, radius*2);
+                ball = new Ball(newX,newY,radius,true,ballBitmap,jumpHeight);
+                floor = new Floor(getHeight(), getWidth());
+                //cards = new Cards(getWidth(), getHeight(), radius, radius*2);
             }
 
             @Override
@@ -94,10 +101,10 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     public void onDraw(Canvas canvas){
         if(canvas != null){
             canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-            //if(floor != null)
-            //    floor.draw(canvas);
-            if(cards != null)
-                cards.draw(canvas);
+            if(floor != null)
+                floor.draw(canvas);
+            //if(cards != null)
+            //    cards.draw(canvas);
             if(ball != null)
                 ball.draw(canvas);
         }
@@ -110,7 +117,36 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     @Override
     public boolean onTouchEvent(MotionEvent event){
         detector.onTouchEvent(event);
-        return false;
+
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                initX = event.getX();
+                initY = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+
+                float motionX = event.getX();
+                float motionY = event.getY();
+
+                if(motionY > initY){
+                    float half = getWidth()/2;
+
+                    if(motionX  > half){
+                        ball.fling(MOVE_RIGHT, 0);
+                    }else if(motionX < half){
+                        ball.fling(MOVE_LEFT, 0);
+                    }
+
+                    floor.fling();
+                }
+
+                break;
+        }
+
+        return true;
     }
 
     @Override
@@ -125,11 +161,6 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
 
     @Override
     public boolean onSingleTapUp(MotionEvent motionEvent) {
-        Log.v("DELETE","sigleTap = "+getHeight());
-        if(gameListener != null)
-            ball.jump(gameListener.getAngle(),getHeight());
-        else
-            ball.jump(0,getHeight());
         return false;
     }
 
@@ -144,15 +175,24 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     }
 
     @Override
-    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent2, float v, float v2) {
-
-        Log.v("DELETE_THIS", "asdf = "+motionEvent.getX()+", "+motionEvent2.getX());
-
-        if(ball != null){
-            double xDiff = motionEvent2.getX() - motionEvent.getX();
-            double yDiff = motionEvent2.getY() - motionEvent.getY();
-            ball.fling((int)Math.toDegrees(Math.atan2(yDiff, xDiff)));
-        }
+    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent2, float xv, float yv) {
+//        Log.v("DELETE_THIS", "onFling");
+//        if(ball != null){
+//            float x1 = motionEvent.getX();
+//            float x2 = motionEvent2.getX();
+//
+//            float half = getWidth()/2;
+//
+//            if(x1 < half && x2 < half){
+//                Log.v("DELETE_THIS", "left");
+//                ball.fling(MOVE_LEFT, yv);
+//            }
+//
+//            if(x1 > half && x2 > half){
+//                Log.v("DELETE_THIS", "right");
+//                ball.fling(MOVE_RIGHT, yv);
+//            }
+//        }
         return false;
     }
 
@@ -189,5 +229,22 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
             gameLoopThread.setRunning(true);
             gameLoopThread.start();
         }
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent event) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent event) {
+        if(ball != null)
+            ball.jump();
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent event) {
+        return false;
     }
 }
