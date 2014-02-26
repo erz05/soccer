@@ -12,7 +12,8 @@ public class Floor {
     private int height;
     private int width;
     private LinkedList<Rectangle> yards;
-    private boolean moving = false;
+    private float veloY = 0;
+    private boolean updateVelo = true;
 
     public Floor(int height, int width){
         this.height = height;
@@ -34,23 +35,35 @@ public class Floor {
         }
     }
 
-    public void update(){
+    public void update(int h){
+        for(Rectangle rectangle: yards){
+            rectangle.update(veloY, h);
+        }
 
+        veloY -= .1;
+        if(veloY < 0){
+            veloY = 0;
+        }
+
+        updateVelo = true;
     }
 
     public void draw(Canvas canvas){
-        update();
+        update(canvas.getHeight());
 
         for(Rectangle rectangle: yards){
-            if(moving)
-                rectangle.fling();
             rectangle.draw(canvas);
         }
-        moving = false;
     }
 
     public void fling(){
-        if(!moving)
-            moving = true;
+        if(updateVelo){
+            veloY += 3;
+            if(veloY > 30){
+                veloY = 30;
+            }
+
+            updateVelo = false;
+        }
     }
 }

@@ -17,7 +17,6 @@ public class Rectangle {
     private Random random;
     private int yard;
     private boolean print;
-    private float veloY = 0;
 
     public Rectangle(float x, float y, float width, float height, boolean print, int yard){
         this.x = x;
@@ -36,34 +35,19 @@ public class Rectangle {
         random = new Random();
     }
 
-    public void update(int w, int h){
+    public void update(float veloY, int h){
         y += veloY;
         if(y>h+height){
             y = 0;
             yard += 10;
         }
-
-        veloY -= .1;
-        if(veloY < 0){
-            veloY = 0;
-        }
     }
 
     public void draw(Canvas canvas){
-        update(canvas.getWidth(), canvas.getHeight());
-        //RectF rect = new RectF(x,y,x+width,y+height);
-        //canvas.drawRect(rect,paint);
         canvas.drawLine(0,y,canvas.getWidth(),y,paint);
 
         if(print){
             canvas.drawText(""+yard,15, y-height/2, paint);
-        }
-    }
-
-    public void fling(){
-        veloY += 3;
-        if(veloY > 30){
-            veloY = 30;
         }
     }
 }
