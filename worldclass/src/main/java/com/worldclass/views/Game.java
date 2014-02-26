@@ -15,6 +15,7 @@ import android.view.SurfaceView;
 import com.worldclass.R;
 import com.worldclass.listeners.GameListener;
 import com.worldclass.objects.Ball;
+import com.worldclass.objects.Cones;
 import com.worldclass.objects.Floor;
 import com.worldclass.utils.GameLoopThread;
 
@@ -28,6 +29,7 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     private Ball ball;
     private Floor floor;
     //private Cards cards;
+    private Cones cones;
     private GestureDetector detector;
     private GameListener gameListener;
     private int canvasH, canvasW;
@@ -79,6 +81,8 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
                 ball = new Ball(newX,newY,radius,true,ballBitmap,jumpHeight);
                 floor = new Floor(getHeight(), getWidth());
                 //cards = new Cards(getWidth(), getHeight(), radius, radius*2);
+                Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cone);
+                cones = new Cones(getWidth(), getHeight(), radius, coneBitmap);
             }
 
             @Override
@@ -105,6 +109,8 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
                 floor.draw(canvas);
             //if(cards != null)
             //    cards.draw(canvas);
+            if(cones != null)
+                cones.draw(canvas);
             if(ball != null)
                 ball.draw(canvas);
         }
@@ -141,6 +147,7 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
                     }
 
                     floor.fling();
+                    cones.fling();
                 }
 
                 break;
