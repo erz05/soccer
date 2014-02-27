@@ -1,69 +1,90 @@
 package com.worldclass.objects;
 
 import android.graphics.Canvas;
-
-import java.util.LinkedList;
+import android.graphics.Color;
+import android.graphics.Paint;
 
 /**
  * Created by erz on 2/21/14.
  */
 public class Floor {
 
-    private int height;
-    private int width;
-    private LinkedList<Rectangle> yards;
     private float veloY = 0;
-    private boolean updateVelo = true;
+    private float yardHeight;
+    private Paint paint;
 
-    public Floor(int height, int width){
-        this.height = height;
-        this.width = width;
+    private float y1, y2;
+    private int i, yard1, yard2;
+    private float posY;
 
-        yards = new LinkedList<Rectangle>();
+    private int topSpeed;
 
-        int yardHeight = height/10;
-        Rectangle rectangle;
-        int posy = height;
-        for(int i=0; i<11; i++){
-            if(i == 9){
-                rectangle = new Rectangle(0,posy,width,yardHeight,true,i+1);
-            }else {
-                rectangle = new Rectangle(0,posy,width,yardHeight,false,i+1);
-            }
-            yards.add(rectangle);
-            posy -= yardHeight;
-        }
+    public Floor(int height, int width, int textSize, int topSpeed){
+        yardHeight = height/10;
+        y1 = height;
+        y2 = 0;
+        this.topSpeed = topSpeed;
+
+        yard1 = 10;
+        yard2 = 20;
+
+        paint = new Paint();
+        paint.setStrokeWidth(2);
+        paint.setAntiAlias(true);
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setTextSize(textSize);
     }
 
     public void update(int h){
-        for(Rectangle rectangle: yards){
-            rectangle.update(veloY, h);
+        y1 += veloY;
+        y2 += veloY;
+
+        if(y1 > h*2){
+            y1 = 0;
+            yard1 += 20;
+        }
+
+        if(y2 > h*2){
+            y2 = 0;
+            yard2 += 20;
         }
 
         veloY -= .1;
-        if(veloY < 0){
+        if(veloY<0){
             veloY = 0;
         }
-
-        updateVelo = true;
     }
 
     public void draw(Canvas canvas){
+
         update(canvas.getHeight());
 
-        for(Rectangle rectangle: yards){
-            rectangle.draw(canvas);
+        posY = y1 - yardHeight;
+
+        for(i=0; i<10; i++){
+            canvas.drawLine(0,posY,canvas.getWidth(),posY,paint);
+            if(i == 9){
+                canvas.drawText(""+yard1,15, posY+yardHeight/2, paint);
+            }
+            posY -= yardHeight;
+        }
+
+        posY = y2 - yardHeight;
+
+        for(i=0; i<10; i++){
+            canvas.drawLine(0,posY,canvas.getWidth(),posY,paint);
+            if(i == 9){
+                canvas.drawText(""+yard2,15, posY+yardHeight/2, paint);
+            }
+            posY -= yardHeight;
         }
     }
 
     public void fling(){
-        if(updateVelo){
-            veloY += 3;
-            if(veloY > 30){
-                veloY = 30;
-            }
-
-            updateVelo = false;
+        veloY += 3;
+        if(veloY > topSpeed){
+            veloY = topSpeed;
         }
     }
 }

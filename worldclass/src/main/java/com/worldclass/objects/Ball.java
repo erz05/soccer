@@ -2,10 +2,7 @@ package com.worldclass.objects;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.worldclass.views.Game;
 
@@ -19,13 +16,7 @@ public class Ball {
     public int radius;
     public int diameter;
     public boolean alive;
-    private float gravity = 9.81f;
-    private float weight = 2;
-    private float accY = gravity;
-    private float veloY = 10;
     private float veloX = 0;
-    private float dt = 0.03f;
-    private float t = 0;
     private Bitmap ballBitmap;
     private RectF ballRect;
     private int rotate = 0;
@@ -33,6 +24,7 @@ public class Ball {
     private int rotateDirection = 0;
     private float upScale = 1;
     private boolean goingUp = false;
+    private boolean onFloor = true;
     private int count = 0;
 
     public Ball(float x, float y, int radius, boolean alive, Bitmap ballBitmap, int jumpHeight){
@@ -104,6 +96,9 @@ public class Ball {
             if(upScale > 1){
                 upScale -= .1;
             }
+            if(upScale == 1){
+                onFloor = true;
+            }
         }
     }
 
@@ -117,8 +112,9 @@ public class Ball {
     }
 
     public void jump(){
-        if(!goingUp){
+        if(!goingUp && onFloor){
             goingUp = true;
+            onFloor = false;
             rotateDirection = 0;
             veloX = 0;
         }

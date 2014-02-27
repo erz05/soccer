@@ -28,7 +28,6 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     private GameLoopThread gameLoopThread;
     private Ball ball;
     private Floor floor;
-    //private Cards cards;
     private Cones cones;
     private GestureDetector detector;
     private GameListener gameListener;
@@ -67,22 +66,19 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
             public void surfaceCreated(SurfaceHolder holder) {
                 //create stuff here
 
-                int radius = getHeight()/20;
-                int startX = getWidth()/10;
-                int startY = getHeight()/20;
+                int radius = getHeight()/30;
+                int coneSize = getHeight()/20;
                 int jumpHeight = getHeight()/44;
-
-                Log.v("DELETE_THIS", "jump = "+jumpHeight);
+                int topSpeed = getHeight()/62;
 
                 int newX = getWidth()/2 - radius;
                 int newY = getHeight()/2 - radius;
 
                 Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.soccer_ball);
-                ball = new Ball(newX,newY,radius,true,ballBitmap,jumpHeight);
-                floor = new Floor(getHeight(), getWidth());
-                //cards = new Cards(getWidth(), getHeight(), radius, radius*2);
+                ball = new Ball(newX,getHeight()-(radius*4),radius,true,ballBitmap,jumpHeight);
+                floor = new Floor(getHeight(), getWidth(), radius, topSpeed);
                 Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cone);
-                cones = new Cones(getWidth(), getHeight(), radius, coneBitmap);
+                cones = new Cones(getWidth(), getHeight(), coneSize, coneBitmap, topSpeed);
             }
 
             @Override
@@ -183,23 +179,6 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
 
     @Override
     public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent2, float xv, float yv) {
-//        Log.v("DELETE_THIS", "onFling");
-//        if(ball != null){
-//            float x1 = motionEvent.getX();
-//            float x2 = motionEvent2.getX();
-//
-//            float half = getWidth()/2;
-//
-//            if(x1 < half && x2 < half){
-//                Log.v("DELETE_THIS", "left");
-//                ball.fling(MOVE_LEFT, yv);
-//            }
-//
-//            if(x1 > half && x2 > half){
-//                Log.v("DELETE_THIS", "right");
-//                ball.fling(MOVE_RIGHT, yv);
-//            }
-//        }
         return false;
     }
 

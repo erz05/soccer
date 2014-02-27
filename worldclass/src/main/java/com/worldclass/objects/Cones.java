@@ -13,9 +13,10 @@ public class Cones {
     private LinkedList<Cone> coneList;
     private boolean updateVelo = true;
     private float veloY = 0;
+    private int topSpeed;
 
-    public Cones(int w, int h, int size, Bitmap bitmap){
-
+    public Cones(int w, int h, int size, Bitmap bitmap, int topSpeed){
+        this.topSpeed = topSpeed;
         coneList = new LinkedList<Cone>();
         Cone cone;
         int posx = 100;
@@ -52,8 +53,8 @@ public class Cones {
     public void fling(){
         if(updateVelo){
             veloY += 3;
-            if(veloY > 30)
-                veloY = 30;
+            if(veloY > topSpeed)
+                veloY = topSpeed;
             updateVelo = false;
         }
     }

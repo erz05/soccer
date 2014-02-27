@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -46,8 +47,8 @@ public class Rectangle {
     public void draw(Canvas canvas){
         canvas.drawLine(0,y,canvas.getWidth(),y,paint);
 
-        if(print){
+        //if(print){
             canvas.drawText(""+yard,15, y-height/2, paint);
-        }
+        //}
     }
 }
