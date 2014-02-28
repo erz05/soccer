@@ -2,24 +2,24 @@ package com.worldclass.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.worldclass.R;
 import com.worldclass.listeners.GameListener;
 import com.worldclass.listeners.MenuListener;
-import com.worldclass.listeners.PauseListener;
 import com.worldclass.views.Game;
 import com.worldclass.views.Menu;
-import com.worldclass.views.Pause;
 
-public class MainActivity extends Activity implements MenuListener, GameListener, PauseListener {
+public class MainActivity extends Activity implements MenuListener, GameListener {
     private Game game;
     private Menu menu;
-    private Pause pauseView;
     private boolean paused = true;
     private OrientationEventListener orientationEventListener;
     private int orientation = 0;
@@ -29,14 +29,14 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
+        FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
         game = new Game(this);
         game.setGameListener(this);
         menu = new Menu(this);
         menu.setListener(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         menu.setLayoutParams(params);
-        mainLayout.addView(menu);
+        gameFrame.addView(menu);
 
         orientationEventListener = new OrientationEventListener(this) {
             @Override
@@ -46,8 +46,22 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             }
         };
 
-        pauseView = new Pause(this);
-        pauseView.setListener(this);
+        Button quit = (Button) findViewById(R.id.quitButton);
+        Button resume = (Button) findViewById(R.id.resumeButton);
+
+        quit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onGameQuit();
+            }
+        });
+
+        resume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onGameResume();
+            }
+        });
     }
 
     @Override
@@ -58,10 +72,8 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             if(game != null){
                 game.pause();
                 paused = true;
-                LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
-                if(pauseView != null){
-                    mainLayout.addView(pauseView);
-                }
+                LinearLayout pauseLayout = (LinearLayout) findViewById(R.id.pauseMenu);
+                pauseLayout.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -96,9 +108,9 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     @Override
     public void onPlay() {
         paused = false;
-        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
-        mainLayout.removeView(menu);
-        mainLayout.addView(game);
+        FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
+        gameFrame.removeView(menu);
+        gameFrame.addView(game);
         game.start();
     }
 
@@ -107,18 +119,15 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         return orientation;
     }
 
-    @Override
     public void onGameResume() {
         if(game != null){
             game.resume();
         }
-        if(pauseView != null){
-            LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
-            mainLayout.removeView(pauseView);
-        }
+        paused = false;
+        LinearLayout pauseLayout = (LinearLayout) findViewById(R.id.pauseMenu);
+        pauseLayout.setVisibility(View.GONE);
     }
 
-    @Override
     public void onGameQuit() {
         onBackPressed();
     }

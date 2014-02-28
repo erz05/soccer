@@ -4,9 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.PixelFormat;
-import android.graphics.PorterDuff;
-import android.util.Log;
+import android.graphics.Color;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -41,8 +39,6 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
 
     public Game(Context context) {
         super(context);
-        setZOrderOnTop(true);
-        getHolder().setFormat(PixelFormat.TRANSPARENT);
         gameLoopThread = new GameLoopThread(this);
         holder = getHolder();
         holder.addCallback(new SurfaceHolder.Callback() {
@@ -100,7 +96,7 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     @Override
     public void onDraw(Canvas canvas){
         if(canvas != null){
-            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+            canvas.drawColor(Color.parseColor("#22B14C"));
             if(floor != null)
                 floor.draw(canvas);
             //if(cards != null)

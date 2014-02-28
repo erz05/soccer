@@ -1,6 +1,53 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/mainLayout"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:background="#22B14C"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/mainLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <FrameLayout android:id="@+id/gameFrame"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"/>
+
+    <LinearLayout android:id="@+id/pauseMenu"
+                  android:orientation="vertical"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:gravity="center"
+                  android:layout_centerInParent="true"
+                  android:background="#000000"
+                  android:padding="10dp"
+                  android:visibility="gone">
+
+        <TextView android:id="@+id/score"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Score: 0"
+                  android:textSize="24sp"/>
+
+        <TextView android:id="@+id/highScore"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="High Score: 0"
+                  android:textSize="24sp"/>
+
+        <LinearLayout android:orientation="horizontal"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+
+            <Button android:id="@+id/quitButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Quit"/>
+
+            <Button android:id="@+id/resumeButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Resume"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
