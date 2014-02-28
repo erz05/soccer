@@ -13,23 +13,20 @@ public class Floor {
     private float yardHeight;
     private Paint paint;
 
-    private float y1, y2;
-    private int i, yard1, yard2;
-    private float posY;
+    private float y;
+    private int yard;
 
     private int topSpeed;
 
     public Floor(int height, int width, int textSize, int topSpeed){
         yardHeight = height/10;
-        y1 = height;
-        y2 = 0;
+        y = 0;
         this.topSpeed = topSpeed;
 
-        yard1 = 10;
-        yard2 = 20;
+        yard = 0;
 
         paint = new Paint();
-        paint.setStrokeWidth(2);
+        paint.setStrokeWidth(5);
         paint.setAntiAlias(true);
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -37,17 +34,11 @@ public class Floor {
     }
 
     public void update(int h){
-        y1 += veloY;
-        y2 += veloY;
+        y += veloY;
 
-        if(y1 > h*2){
-            y1 = 0;
-            yard1 += 20;
-        }
-
-        if(y2 > h*2){
-            y2 = 0;
-            yard2 += 20;
+        if(y > h){
+            y = 0;
+            yard += 1;
         }
 
         veloY -= .1;
@@ -57,28 +48,10 @@ public class Floor {
     }
 
     public void draw(Canvas canvas){
-
         update(canvas.getHeight());
-
-        posY = y1 - yardHeight;
-
-        for(i=0; i<10; i++){
-            canvas.drawLine(0,posY,canvas.getWidth(),posY,paint);
-            if(i == 9){
-                canvas.drawText(""+yard1,15, posY+yardHeight/2, paint);
-            }
-            posY -= yardHeight;
-        }
-
-        posY = y2 - yardHeight;
-
-        for(i=0; i<10; i++){
-            canvas.drawLine(0,posY,canvas.getWidth(),posY,paint);
-            if(i == 9){
-                canvas.drawText(""+yard2,15, posY+yardHeight/2, paint);
-            }
-            posY -= yardHeight;
-        }
+        if(yard != 0 && (yard % 10)==0)
+            canvas.drawLine(0,y,canvas.getWidth(),y,paint);
+        canvas.drawText("Distance = "+yard+"-yd",yardHeight/2,yardHeight/2,paint);
     }
 
     public void fling(){

@@ -70,20 +70,6 @@ public class Ball {
         rotate += rotateDirection;
         rotate = rotate % 360;
 
-//        if(rotate>0){
-//            rotate -= .1;
-//            if(rotate < 0){
-//                rotate = 0;
-//            }
-//        }
-//
-//        if(rotate < 0){
-//            rotate += .1;
-//            if(rotate > 0){
-//                rotate =0;
-//            }
-//        }
-
         if(goingUp){
             if(count < 20){
                 upScale += .1;
@@ -121,7 +107,6 @@ public class Ball {
     }
 
     public void fling(int direction, float v) {
-        //Log.v("DELETE_THIS", "direction = "+direction);
         if(!goingUp){
             switch (direction){
                 case Game.MOVE_LEFT:
