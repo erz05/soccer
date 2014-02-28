@@ -105,6 +105,12 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
                 cones.draw(canvas);
             if(ball != null)
                 ball.draw(canvas);
+
+            if(cones.checkCollision(ball.getBounds())){
+                if(gameListener != null){
+                    gameListener.onGameOver();
+                }
+            }
         }
     }
 

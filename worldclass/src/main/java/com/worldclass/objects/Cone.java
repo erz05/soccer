@@ -40,4 +40,8 @@ public class Cone {
         rect.set(x, y, x + size, y + size);
         canvas.drawBitmap(bitmap, null, rect, null);
     }
+
+    public RectF getBounds(){
+        return rect;
+    }
 }

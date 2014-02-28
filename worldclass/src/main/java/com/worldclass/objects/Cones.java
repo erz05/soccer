@@ -2,6 +2,7 @@ package com.worldclass.objects;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.RectF;
 
 import java.util.LinkedList;
 
@@ -57,5 +58,14 @@ public class Cones {
                 veloY = topSpeed;
             updateVelo = false;
         }
+    }
+
+    public boolean checkCollision(RectF ballRect){
+        for(Cone cone: coneList){
+            if(cone.getBounds().intersect(ballRect)){
+                return true;
+            }
+        }
+        return false;
     }
 }

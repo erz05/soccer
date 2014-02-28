@@ -97,6 +97,10 @@ public class Ball {
         canvas.drawBitmap(ballBitmap, null, ballRect, null);
     }
 
+    public RectF getBounds(){
+        return ballRect;
+    }
+
     public void jump(){
         if(!goingUp && onFloor){
             goingUp = true;

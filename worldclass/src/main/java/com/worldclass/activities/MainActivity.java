@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.worldclass.R;
 import com.worldclass.listeners.GameListener;
@@ -117,6 +116,16 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     @Override
     public int getAngle() {
         return orientation;
+    }
+
+    @Override
+    public void onGameOver() {
+        if(game != null){
+            game.pause();
+        }
+        paused = true;
+        LinearLayout pauseLayout = (LinearLayout) findViewById(R.id.pauseMenu);
+        pauseLayout.setVisibility(View.VISIBLE);
     }
 
     public void onGameResume() {

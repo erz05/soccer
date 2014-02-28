@@ -5,4 +5,5 @@ package com.worldclass.listeners;
  */
 public interface GameListener {
     public int getAngle();
+    public void onGameOver();
 }
