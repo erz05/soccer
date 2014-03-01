@@ -4,6 +4,5 @@ package com.worldclass.listeners;
  * Created by erz on 2/23/14.
  */
 public interface GameListener {
-    public int getAngle();
-    public void onGameOver();
+    public void onGameOver(int score);
 }

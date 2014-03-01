@@ -29,8 +29,7 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     private Cones cones;
     private GestureDetector detector;
     private GameListener gameListener;
-    private int canvasH, canvasW;
-    boolean goingup = false;
+    private boolean isGameOver = false;
 
     private float initX, initY;
 
@@ -84,8 +83,6 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
         });
 
         detector = new GestureDetector(context, this);
-        canvasH = getHeight();
-        canvasW = getWidth();
     }
 
     @Override
@@ -99,18 +96,21 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
             canvas.drawColor(Color.parseColor("#22B14C"));
             if(floor != null)
                 floor.draw(canvas);
-            //if(cards != null)
-            //    cards.draw(canvas);
             if(cones != null)
                 cones.draw(canvas);
             if(ball != null)
                 ball.draw(canvas);
 
             if(cones.checkCollision(ball.getBounds())){
-                if(gameListener != null){
-                    gameListener.onGameOver();
-                }
+                gameOver();
             }
+        }
+    }
+
+    public void gameOver(){
+        if(gameListener != null){
+            isGameOver = true;
+            gameListener.onGameOver(floor.getYards());
         }
     }
 
@@ -120,38 +120,41 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        detector.onTouchEvent(event);
+        if(!isGameOver){
+            detector.onTouchEvent(event);
 
-        switch (event.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                initX = event.getX();
-                initY = event.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
+            switch (event.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    initX = event.getX();
+                    initY = event.getY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
 
-                float motionX = event.getX();
-                float motionY = event.getY();
+                    float motionX = event.getX();
+                    float motionY = event.getY();
 
-                if(motionY > initY){
-                    float half = getWidth()/2;
+                    if(motionY > initY){
+                        float half = getWidth()/2;
 
-                    if(motionX  > half){
-                        ball.fling(MOVE_RIGHT, 0);
-                    }else if(motionX < half){
-                        ball.fling(MOVE_LEFT, 0);
+                        if(motionX  > half){
+                            ball.fling(MOVE_RIGHT, 0);
+                        }else if(motionX < half){
+                            ball.fling(MOVE_LEFT, 0);
+                        }
+
+                        floor.fling();
+                        cones.fling();
                     }
 
-                    floor.fling();
-                    cones.fling();
-                }
+                    break;
+            }
 
-                break;
+            return true;
         }
-
-        return true;
+        return false;
     }
 
     @Override
@@ -203,6 +206,7 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
                     gameLoopThread.join();
                     retry = false;
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
             gameLoopThread = null;
@@ -211,6 +215,9 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
 
     public void resume(){
         if(gameLoopThread == null){
+            gameLoopThread = new GameLoopThread(this);
+        }else {
+            gameLoopThread = null;
             gameLoopThread = new GameLoopThread(this);
         }
         if(gameLoopThread != null && !gameLoopThread.isRunning()){

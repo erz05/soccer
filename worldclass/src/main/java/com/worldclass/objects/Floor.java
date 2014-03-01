@@ -14,7 +14,7 @@ public class Floor {
     private Paint paint;
 
     private float y;
-    private int yard;
+    private int yards;
 
     private int topSpeed;
 
@@ -23,7 +23,7 @@ public class Floor {
         y = 0;
         this.topSpeed = topSpeed;
 
-        yard = 0;
+        yards = 0;
 
         paint = new Paint();
         paint.setStrokeWidth(5);
@@ -38,7 +38,7 @@ public class Floor {
 
         if(y > h){
             y = 0;
-            yard += 1;
+            yards += 1;
         }
 
         veloY -= .1;
@@ -49,9 +49,9 @@ public class Floor {
 
     public void draw(Canvas canvas){
         update(canvas.getHeight());
-        if(yard != 0 && (yard % 10)==0)
+        if(yards != 0 && (yards % 10)==0)
             canvas.drawLine(0,y,canvas.getWidth(),y,paint);
-        canvas.drawText("Distance = "+yard+"-yd",yardHeight/2,yardHeight/2,paint);
+        canvas.drawText("Distance = "+yards+"-yd",yardHeight/2,yardHeight/2,paint);
     }
 
     public void fling(){
@@ -59,5 +59,9 @@ public class Floor {
         if(veloY > topSpeed){
             veloY = topSpeed;
         }
+    }
+
+    public int getYards(){
+        return yards;
     }
 }
