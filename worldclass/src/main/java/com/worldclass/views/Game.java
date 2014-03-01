@@ -120,6 +120,13 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
         this.gameListener = gameListener;
     }
 
+    public int getScore(){
+        if(floor != null){
+            return floor.getYards();
+        }
+        return 0;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event){
         if(!isGameOver){

@@ -1,8 +1,8 @@
 package com.worldclass.activities;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +21,7 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     private Game game;
     private Menu menu;
     private boolean paused;
+    private final String PREFS = "preferencesFile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,8 @@ public class MainActivity extends Activity implements MenuListener, GameListener
                 paused = true;
                 LinearLayout pauseLayout = (LinearLayout) findViewById(R.id.pauseMenu);
                 pauseLayout.setVisibility(View.VISIBLE);
+                TextView scoreView = (TextView) findViewById(R.id.score);
+                scoreView.setText("Score: "+game.getScore());
             }
         }
     }
@@ -132,9 +135,21 @@ public class MainActivity extends Activity implements MenuListener, GameListener
                 paused = true;
                 LinearLayout endMenu = (LinearLayout) findViewById(R.id.endMenu);
                 TextView scoreView = (TextView) findViewById(R.id.endScore);
+                TextView highView = (TextView) findViewById(R.id.highScore);
 
                 scoreView.setText("Score: "+score);
                 endMenu.setVisibility(View.VISIBLE);
+
+                SharedPreferences settings = getSharedPreferences(PREFS,0);
+                int highScore = settings.getInt("highScore", 0);
+
+                highView.setText("Highscore: "+highScore);
+
+                if(score > highScore){
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putInt("highScore", score);
+                    editor.commit();
+                }
             }
         });
     }
