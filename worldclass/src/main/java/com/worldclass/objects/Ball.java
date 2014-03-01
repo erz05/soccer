@@ -101,6 +101,10 @@ public class Ball {
         return ballRect;
     }
 
+    public float getUpScale(){
+        return upScale;
+    }
+
     public void jump(){
         if(!goingUp && onFloor){
             goingUp = true;
