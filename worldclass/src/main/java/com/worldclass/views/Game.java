@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -265,12 +266,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
         int jumpHeight = getHeight()/44;
         int topSpeed = getHeight()/62;
 
+        float speedX = getWidth()/185;
+
         int newX = getWidth()/2 - radius;
         int newY = getHeight()/2 - radius;
 
         powerBar = new PowerBar(getWidth()/2+radius, radius, getWidth()/2-radius*2, radius);
         Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.soccer_ball);
-        ball = new Ball(newX,getHeight()-(radius*4),radius,true,ballBitmap,jumpHeight);
+        ball = new Ball(newX,getHeight()-(radius*4),radius,true,ballBitmap,jumpHeight, speedX);
         ball.setListener(this);
         floor = new Floor(getHeight(), getWidth(), radius, topSpeed);
         Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cone);

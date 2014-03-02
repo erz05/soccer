@@ -18,6 +18,7 @@ public class Ball {
     public int diameter;
     public boolean alive;
     private float veloX = 0;
+    private float speedx;
     private Bitmap ballBitmap;
     private RectF ballRect;
     private int rotate = 0;
@@ -29,7 +30,7 @@ public class Ball {
     private int count = 0;
     private SoundListener listener;
 
-    public Ball(float x, float y, int radius, boolean alive, Bitmap ballBitmap, int jumpHeight){
+    public Ball(float x, float y, int radius, boolean alive, Bitmap ballBitmap, int jumpHeight, float speedx){
         this.x = x;
         this.y = y;
         this.radius = radius;
@@ -37,6 +38,7 @@ public class Ball {
         this.ballBitmap = ballBitmap;
         this.diameter = radius * 2;
         this.jumpHeight = jumpHeight;
+        this.speedx = speedx;
 
         ballRect = new RectF();
     }
@@ -126,13 +128,13 @@ public class Ball {
 //            }
             switch (direction){
                 case Game.MOVE_LEFT:
-                    veloX -= 5;
+                    veloX -= speedx;
                     if(rotateDirection > 0)
                         rotateDirection = 0;
                     rotateDirection -= 2;
                 break;
                 case Game.MOVE_RIGHT:
-                    veloX += 5;
+                    veloX += speedx;
                     if(rotateDirection < 0)
                         rotateDirection = 0;
                     rotateDirection += 2;
