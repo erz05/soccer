@@ -15,20 +15,25 @@ public class Cones {
     private boolean updateVelo = true;
     private float veloY = 0;
     private int topSpeed;
+    private RectF currentRect;
+    private float currentX, currentY, size;
+    private Bitmap coneBitmap;
 
     public Cones(int w, int h, int size, Bitmap bitmap, int topSpeed){
         this.topSpeed = topSpeed;
+        this.size = size;
+        this.coneBitmap = bitmap;
         coneList = new LinkedList<Cone>();
         Cone cone;
         int posx = 100;
         int posy = 0;
         for(int i=0; i<2; i++){
-            cone = new Cone(posx,posy-size, size, bitmap);
+            cone = new Cone(posx,posy-size, size);
             coneList.add(cone);
             posx += 400;
             posy -= 500;
         }
-
+        currentRect = new RectF();
     }
 
     public void update(int w, int h){
@@ -47,7 +52,10 @@ public class Cones {
     public void draw(Canvas canvas){
         update(canvas.getWidth(), canvas.getHeight());
         for(Cone cone: coneList){
-            cone.draw(canvas);
+            currentX = cone.x;
+            currentY = cone.y;
+            currentRect.set(currentX, currentY, currentX+size, currentY+size);
+            canvas.drawBitmap(coneBitmap, null, currentRect, null);
         }
     }
 
@@ -62,7 +70,10 @@ public class Cones {
 
     public boolean checkCollision(RectF ballRect){
         for(Cone cone: coneList){
-            if(cone.getBounds().intersect(ballRect)){
+            currentX = cone.x;
+            currentY = cone.y;
+            currentRect.set(currentX, currentY, currentX + size, currentY+size);
+            if(currentRect.intersect(ballRect)){
                 return true;
             }
         }
