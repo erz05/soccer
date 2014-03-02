@@ -10,7 +10,8 @@ import android.graphics.Paint;
 public class PowerBar {
 
     float x, y, w, h;
-    float power;
+    float power, minus;
+    int count = 0;
     private Paint paint, borderPaint;
 
     public PowerBar(float x, float y, float w, float h){
@@ -20,6 +21,8 @@ public class PowerBar {
         this.w = w;
         this.h = h;
         this.power = w;
+
+        minus = w/100;
 
         paint = new Paint();
         paint.setColor(Color.YELLOW);
@@ -34,10 +37,15 @@ public class PowerBar {
     }
 
     public void update(){
-        power -= .1;
-        if(power < 0){
-            power = 0;
+
+        if(count > 30){
+            power -= minus;
+            if(power < 0){
+                power = 0;
+            }
+            count = 0;
         }
+        count += 1;
     }
 
     public void draw(Canvas canvas){
@@ -46,8 +54,8 @@ public class PowerBar {
         canvas.drawRect(x,y,x+w,y+h,borderPaint);
     }
 
-    public void addPower(float power){
-        this.power += power;
+    public void addPower(){
+        this.power += minus*2;
         if(this.power>w){
             this.power = w;
         }

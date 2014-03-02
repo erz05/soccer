@@ -93,7 +93,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
                 if(conesStars.checkCollision(ball.getBounds()))
                     gameOver();
                 if(conesStars.checkStarCollision(ball.getBounds()))
-                    powerBar.addPower(10);
+                    powerBar.addPower();
             }
         }
     }
