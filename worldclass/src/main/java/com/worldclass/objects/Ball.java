@@ -49,12 +49,12 @@ public class Ball {
 
         if(x<0){
             x = 0;
-            veloX = 0;
+            veloX = -veloX/2;
         }
 
         if(x>width-diameter){
             x = width-diameter;
-            veloX = 0;
+            veloX = -veloX/2;
         }
 
         if(veloX > 0){
@@ -124,20 +124,20 @@ public class Ball {
     public void fling(int direction, float v) {
         if(!goingUp){
 //            if(listener != null){
-//                listener.playSound(Game.SOUND_MOVE);
+//                listener.playSound(Game.SOUND_HIT);
 //            }
             switch (direction){
                 case Game.MOVE_LEFT:
                     veloX -= speedx;
                     if(rotateDirection > 0)
                         rotateDirection = 0;
-                    rotateDirection -= 2;
+                    rotateDirection += 2;
                 break;
                 case Game.MOVE_RIGHT:
                     veloX += speedx;
                     if(rotateDirection < 0)
                         rotateDirection = 0;
-                    rotateDirection += 2;
+                    rotateDirection -= 2;
                 break;
             }
         }

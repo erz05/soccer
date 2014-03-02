@@ -112,6 +112,8 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     }
 
     public void restartGame() {
+        LinearLayout endMenu = (LinearLayout) findViewById(R.id.endMenu);
+        endMenu.setVisibility(View.GONE);
         FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
         if(game != null){
             gameFrame.removeView(game);
@@ -122,8 +124,6 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             paused = false;
             gameFrame.addView(game);
             game.start();
-            LinearLayout endMenu = (LinearLayout) findViewById(R.id.endMenu);
-            endMenu.setVisibility(View.GONE);
         }
     }
 

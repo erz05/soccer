@@ -5,9 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -91,8 +89,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
                 ball.draw(canvas);
 
             if(conesStars != null && ball != null && ball.getUpScale() == 1){
-                if(conesStars.checkCollision(ball.getBounds()))
-                    gameOver();
+                //if(conesStars.checkCollision(ball.getBounds()))
+                 //   gameOver();
                 if(conesStars.checkStarCollision(ball.getBounds()))
                     powerBar.addPower();
             }
