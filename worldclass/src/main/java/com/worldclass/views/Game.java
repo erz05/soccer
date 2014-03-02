@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -12,6 +14,7 @@ import android.view.SurfaceView;
 
 import com.worldclass.R;
 import com.worldclass.listeners.GameListener;
+import com.worldclass.listeners.SoundListener;
 import com.worldclass.objects.Ball;
 import com.worldclass.objects.Cones;
 import com.worldclass.objects.Floor;
@@ -20,7 +23,7 @@ import com.worldclass.utils.GameLoopThread;
 /**
  * Created by erz on 2/19/14.
  */
-public class Game extends SurfaceView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+public class Game extends SurfaceView implements SurfaceHolder.Callback, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, SoundListener {
 
     private SurfaceHolder holder;
     private GameLoopThread gameLoopThread;
@@ -35,53 +38,24 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
 
     public final static int MOVE_LEFT = 0;
     public final static int MOVE_RIGHT = 1;
+    public final static int SOUND_MOVE = 101;
+    public final static int SOUND_HIT = 102;
+    public final static int SOUND_JUMP = 103;
+
+    private MediaPlayer moveSound;
+    private MediaPlayer hitSound;
+    private MediaPlayer jumpSound;
 
     public Game(Context context) {
         super(context);
+
+        moveSound = MediaPlayer.create(context, R.raw.swosh);
+        hitSound = MediaPlayer.create(context, R.raw.hit);
+        jumpSound = MediaPlayer.create(context, R.raw.jump);
+
         gameLoopThread = new GameLoopThread(this);
         holder = getHolder();
-        holder.addCallback(new SurfaceHolder.Callback() {
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-                if(gameLoopThread != null){
-                    boolean retry = true;
-                    gameLoopThread.setRunning(false);
-                    while (retry) {
-                        try {
-                            gameLoopThread.join();
-                            retry = false;
-                        } catch (InterruptedException e) {
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                //create stuff here
-
-                int radius = getHeight()/30;
-                int coneSize = getHeight()/20;
-                int jumpHeight = getHeight()/44;
-                int topSpeed = getHeight()/62;
-
-                int newX = getWidth()/2 - radius;
-                int newY = getHeight()/2 - radius;
-
-                Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.soccer_ball);
-                ball = new Ball(newX,getHeight()-(radius*4),radius,true,ballBitmap,jumpHeight);
-                floor = new Floor(getHeight(), getWidth(), radius, topSpeed);
-                Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cone);
-                cones = new Cones(getWidth(), getHeight(), coneSize, coneBitmap, topSpeed);
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format,
-                                       int width, int height) {
-            }
-        });
-
+        holder.addCallback(this);
         detector = new GestureDetector(context, this);
     }
 
@@ -110,6 +84,7 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     }
 
     public void gameOver(){
+        playSound(SOUND_HIT);
         if(gameListener != null){
             isGameOver = true;
             gameListener.onGameOver(floor.getYards());
@@ -250,5 +225,59 @@ public class Game extends SurfaceView implements GestureDetector.OnGestureListen
     @Override
     public boolean onDoubleTapEvent(MotionEvent event) {
         return false;
+    }
+
+    @Override
+    public void playSound(int sound) {
+        Log.v("DELETE_THIS", "playSound = "+sound);
+        switch (sound){
+            case SOUND_MOVE:
+                moveSound.start();
+                break;
+            case SOUND_HIT:
+                hitSound.start();
+                break;
+            case SOUND_JUMP:
+                jumpSound.start();
+                break;
+        }
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        int radius = getHeight()/30;
+        int coneSize = getHeight()/20;
+        int jumpHeight = getHeight()/44;
+        int topSpeed = getHeight()/62;
+
+        int newX = getWidth()/2 - radius;
+        int newY = getHeight()/2 - radius;
+
+        Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.soccer_ball);
+        ball = new Ball(newX,getHeight()-(radius*4),radius,true,ballBitmap,jumpHeight);
+        ball.setListener(this);
+        floor = new Floor(getHeight(), getWidth(), radius, topSpeed);
+        Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cone);
+        cones = new Cones(getWidth(), getHeight(), coneSize, coneBitmap, topSpeed);
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+        if(gameLoopThread != null){
+            boolean retry = true;
+            gameLoopThread.setRunning(false);
+            while (retry) {
+                try {
+                    gameLoopThread.join();
+                    retry = false;
+                } catch (InterruptedException e) {
+                }
+            }
+        }
     }
 }

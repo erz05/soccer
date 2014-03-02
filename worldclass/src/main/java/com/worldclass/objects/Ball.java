@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
+import com.worldclass.listeners.SoundListener;
 import com.worldclass.views.Game;
 
 /**
@@ -26,6 +27,7 @@ public class Ball {
     private boolean goingUp = false;
     private boolean onFloor = true;
     private int count = 0;
+    private SoundListener listener;
 
     public Ball(float x, float y, int radius, boolean alive, Bitmap ballBitmap, int jumpHeight){
         this.x = x;
@@ -111,11 +113,17 @@ public class Ball {
             onFloor = false;
             rotateDirection = 0;
             veloX = 0;
+            if(listener != null){
+                listener.playSound(Game.SOUND_JUMP);
+            }
         }
     }
 
     public void fling(int direction, float v) {
         if(!goingUp){
+//            if(listener != null){
+//                listener.playSound(Game.SOUND_MOVE);
+//            }
             switch (direction){
                 case Game.MOVE_LEFT:
                     veloX -= 5;
@@ -131,5 +139,9 @@ public class Ball {
                 break;
             }
         }
+    }
+
+    public void setListener(SoundListener listener){
+        this.listener = listener;
     }
 }
