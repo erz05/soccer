@@ -13,14 +13,15 @@ public class Floor {
     private float yardHeight;
     private Paint paint;
 
-    private float y;
+    private float y, spacing;
     private int yards;
 
     private int topSpeed;
 
-    public Floor(int height, int width, int textSize, int topSpeed){
+    public Floor(int height, int width, float textSize, int topSpeed){
         yardHeight = height/10;
         y = 0;
+        this.spacing = textSize;
         this.topSpeed = topSpeed;
 
         yards = 0;
@@ -51,7 +52,7 @@ public class Floor {
         update(canvas.getHeight());
         if(yards != 0 && (yards % 10)==0)
             canvas.drawLine(0,y,canvas.getWidth(),y,paint);
-        canvas.drawText("Score: "+yards,yardHeight/2,yardHeight/2,paint);
+        canvas.drawText("Score: "+yards,spacing,spacing*2,paint);
     }
 
     public void fling(){

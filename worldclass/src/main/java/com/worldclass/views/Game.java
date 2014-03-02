@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -15,8 +16,9 @@ import com.worldclass.R;
 import com.worldclass.listeners.GameListener;
 import com.worldclass.listeners.SoundListener;
 import com.worldclass.objects.Ball;
-import com.worldclass.objects.Cones;
+import com.worldclass.objects.ConesStars;
 import com.worldclass.objects.Floor;
+import com.worldclass.objects.PowerBar;
 import com.worldclass.utils.GameLoopThread;
 
 /**
@@ -28,7 +30,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
     private GameLoopThread gameLoopThread;
     private Ball ball;
     private Floor floor;
-    private Cones cones;
+    private PowerBar powerBar;
+    private ConesStars conesStars;
     private GestureDetector detector;
     private GameListener gameListener;
     private boolean isGameOver = false;
@@ -63,20 +66,30 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
+    private void update(){
+
+    }
+
     @Override
     public void onDraw(Canvas canvas){
         if(canvas != null){
             canvas.drawColor(Color.parseColor("#22B14C"));
             if(floor != null)
                 floor.draw(canvas);
-            if(cones != null)
-                cones.draw(canvas);
+
+            if(powerBar != null)
+                powerBar.draw(canvas);
+
+            if(conesStars != null)
+                conesStars.draw(canvas);
             if(ball != null)
                 ball.draw(canvas);
 
-            if(cones != null && ball != null && ball.getUpScale() == 1){
-                if(cones.checkCollision(ball.getBounds()))
+            if(conesStars != null && ball != null && ball.getUpScale() == 1){
+                if(conesStars.checkCollision(ball.getBounds()))
                     gameOver();
+                if(conesStars.checkStarCollision(ball.getBounds()))
+                    powerBar.addPower(10);
             }
         }
     }
@@ -127,7 +140,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
                         }
 
                         floor.fling();
-                        cones.fling();
+                        conesStars.fling();
                     }
 
                     break;
@@ -251,12 +264,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
         int newX = getWidth()/2 - radius;
         int newY = getHeight()/2 - radius;
 
+        powerBar = new PowerBar(getWidth()/2+radius, radius, getWidth()/2-radius*2, radius);
         Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.soccer_ball);
         ball = new Ball(newX,getHeight()-(radius*4),radius,true,ballBitmap,jumpHeight);
         ball.setListener(this);
         floor = new Floor(getHeight(), getWidth(), radius, topSpeed);
         Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cone);
-        cones = new Cones(getWidth(), getHeight(), coneSize, coneBitmap, topSpeed);
+        Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star);
+        conesStars = new ConesStars(getWidth(), getHeight(), coneSize, coneBitmap, starBitmap, topSpeed);
     }
 
     @Override

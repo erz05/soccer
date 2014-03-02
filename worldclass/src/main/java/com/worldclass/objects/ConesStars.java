@@ -5,34 +5,44 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 /**
  * Created by erz on 2/25/14.
  */
-public class Cones {
+public class ConesStars {
 
     private LinkedList<Cone> coneList;
+    //private LinkedList<Star> starList;
+    private Star star;
     private boolean updateVelo = true;
     private float veloY = 0;
     private int topSpeed;
     private RectF currentRect;
     private float currentX, currentY, size;
-    private Bitmap coneBitmap;
+    private Bitmap coneBitmap, starBitmap;
+    private Random random;
 
-    public Cones(int w, int h, int size, Bitmap bitmap, int topSpeed){
+    public ConesStars(int w, int h, int size, Bitmap coneBitmap, Bitmap starBitmap, int topSpeed){
         this.topSpeed = topSpeed;
         this.size = size;
-        this.coneBitmap = bitmap;
+        this.coneBitmap = coneBitmap;
+        this.starBitmap = starBitmap;
+
+        random  = new Random();
+
         coneList = new LinkedList<Cone>();
         Cone cone;
-        int posx = 100;
+        int posx = random.nextInt(w-size);
         int posy = 0;
-        for(int i=0; i<2; i++){
+        for(int i=0; i<3; i++){
             cone = new Cone(posx,posy-size, size);
             coneList.add(cone);
-            posx += 400;
-            posy -= 500;
+            posy -= size*8;
         }
+
+        star = new Star(posx, posy, size);
+
         currentRect = new RectF();
     }
 
@@ -40,6 +50,8 @@ public class Cones {
         for (Cone cone: coneList){
             cone.update(veloY, w, h);
         }
+
+        star.update(veloY, w, h);
 
         veloY -= .1;
         if(veloY < 0){
@@ -56,6 +68,11 @@ public class Cones {
             currentY = cone.y;
             currentRect.set(currentX, currentY, currentX+size, currentY+size);
             canvas.drawBitmap(coneBitmap, null, currentRect, null);
+        }
+
+        if(star.visible){
+            currentRect.set(star.x, star.y, star.x+size, star.y+size);
+            canvas.drawBitmap(starBitmap, null, currentRect, null);
         }
     }
 
@@ -76,6 +93,15 @@ public class Cones {
             if(currentRect.intersect(ballRect)){
                 return true;
             }
+        }
+        return false;
+    }
+
+    public boolean checkStarCollision(RectF ballRect){
+        currentRect.set(star.x, star.y, star.x+size, star.y+size);
+        if(currentRect.intersect(ballRect)){
+            star.visible = false;
+            return true;
         }
         return false;
     }
