@@ -51,7 +51,7 @@ public class Floor {
         update(canvas.getHeight());
         if(yards != 0 && (yards % 10)==0)
             canvas.drawLine(0,y,canvas.getWidth(),y,paint);
-        canvas.drawText("Distance = "+yards+"-yd",yardHeight/2,yardHeight/2,paint);
+        canvas.drawText("Score: "+yards,yardHeight/2,yardHeight/2,paint);
     }
 
     public void fling(){

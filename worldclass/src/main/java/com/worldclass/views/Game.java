@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -76,9 +75,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
                 ball.draw(canvas);
 
             if(cones != null && ball != null && ball.getUpScale() == 1){
-                if(cones.checkCollision(ball.getBounds())){
+                if(cones.checkCollision(ball.getBounds()))
                     gameOver();
-                }
             }
         }
     }
@@ -96,9 +94,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
     }
 
     public int getScore(){
-        if(floor != null){
+        if(floor != null)
             return floor.getYards();
-        }
         return 0;
     }
 
@@ -229,17 +226,18 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
 
     @Override
     public void playSound(int sound) {
-        Log.v("DELETE_THIS", "playSound = "+sound);
-        switch (sound){
-            case SOUND_MOVE:
-                moveSound.start();
-                break;
-            case SOUND_HIT:
-                hitSound.start();
-                break;
-            case SOUND_JUMP:
-                jumpSound.start();
-                break;
+        if(!isGameOver){
+            switch (sound){
+                case SOUND_MOVE:
+                    moveSound.start();
+                    break;
+                case SOUND_HIT:
+                    hitSound.start();
+                    break;
+                case SOUND_JUMP:
+                    jumpSound.start();
+                    break;
+            }
         }
     }
 
