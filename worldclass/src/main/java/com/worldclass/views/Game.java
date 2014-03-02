@@ -77,8 +77,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
             if(floor != null)
                 floor.draw(canvas);
 
-            if(powerBar != null)
+            if(powerBar != null){
                 powerBar.draw(canvas);
+                if(powerBar.getPower() == 0){
+                    gameOver();
+                }
+            }
 
             if(conesStars != null)
                 conesStars.draw(canvas);

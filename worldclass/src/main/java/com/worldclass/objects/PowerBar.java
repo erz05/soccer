@@ -52,4 +52,8 @@ public class PowerBar {
             this.power = w;
         }
     }
+
+    public float getPower(){
+        return power;
+    }
 }
