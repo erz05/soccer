@@ -78,9 +78,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
 
             if(powerBar != null){
                 powerBar.draw(canvas);
-                if(powerBar.getPower() == 0){
-                    gameOver();
-                }
+                //if(powerBar.getPower() == 0){
+                //    gameOver();
+                //}
             }
 
             if(conesStars != null)
@@ -91,8 +91,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
             if(conesStars != null && ball != null && ball.getUpScale() == 1){
                 //if(conesStars.checkCollision(ball.getBounds()))
                  //   gameOver();
-                if(conesStars.checkStarCollision(ball.getBounds()))
-                    powerBar.addPower();
+                //if(conesStars.checkStarCollision(ball.getBounds()))
+                //    powerBar.addPower();
             }
         }
     }
@@ -260,7 +260,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         int radius = getHeight()/30;
-        int coneSize = getHeight()/20;
+        int coneSize = getWidth()/17;
         int jumpHeight = getHeight()/44;
         int topSpeed = getHeight()/62;
 

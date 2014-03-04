@@ -49,27 +49,27 @@ public class Ball {
 
         if(x<0){
             x = 0;
-            veloX = -veloX/2;
+            //veloX = -veloX/2;
         }
 
         if(x>width-diameter){
             x = width-diameter;
-            veloX = -veloX/2;
+            //veloX = -veloX/2;
         }
 
-        if(veloX > 0){
-            veloX -= .1;
-            if(veloX < 0){
-                veloX = 0;
-            }
-        }
-
-        if(veloX < 0){
-            veloX += .1;
-            if(veloX > 0){
-                veloX = 0;
-            }
-        }
+//        if(veloX > 0){
+//            veloX -= .1;
+//            if(veloX < 0){
+//                veloX = 0;
+//            }
+//        }
+//
+//        if(veloX < 0){
+//            veloX += .1;
+//            if(veloX > 0){
+//                veloX = 0;
+//            }
+//        }
 
         rotate += rotateDirection;
         rotate = rotate % 360;
@@ -128,13 +128,15 @@ public class Ball {
 //            }
             switch (direction){
                 case Game.MOVE_LEFT:
-                    veloX -= speedx;
+                    veloX = -20;
+                    //veloX -= speedx;
                     if(rotateDirection > 0)
                         rotateDirection = 0;
                     rotateDirection += 2;
                 break;
                 case Game.MOVE_RIGHT:
-                    veloX += speedx;
+                    veloX = 20;
+                    //veloX += speedx;
                     if(rotateDirection < 0)
                         rotateDirection = 0;
                     rotateDirection -= 2;
