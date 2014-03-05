@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../../WorldClass/WorldClass.iml" filepath="$PROJECT_DIR$/../../WorldClass/WorldClass.iml" />
       <module fileurl="file://$PROJECT_DIR$/soccer.iml" filepath="$PROJECT_DIR$/soccer.iml" />
       <module fileurl="file://$PROJECT_DIR$/worldclass/worldclass.iml" filepath="$PROJECT_DIR$/worldclass/worldclass.iml" />
     </modules>
