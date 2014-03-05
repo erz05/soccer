@@ -134,16 +134,18 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
                     float motionY = event.getY();
 
                     if(motionY > initY){
-                        float half = getWidth()/2;
-
-                        if(motionX  > half){
-                            ball.fling(MOVE_RIGHT, 0);
-                        }else if(motionX < half){
-                            ball.fling(MOVE_LEFT, 0);
+                        if(ball != null){
+                            float half = getWidth()/2;
+                            if(motionX  > half){
+                                ball.fling(MOVE_RIGHT, 0);
+                            }else if(motionX < half){
+                                ball.fling(MOVE_LEFT, 0);
+                            }
                         }
-
-                        floor.fling();
-                        conesStars.fling();
+                        if(floor != null)
+                            floor.fling();
+                        if(conesStars != null)
+                            conesStars.fling();
                     }
 
                     break;
