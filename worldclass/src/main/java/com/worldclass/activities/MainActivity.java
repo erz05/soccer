@@ -132,23 +132,25 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                paused = true;
-                LinearLayout endMenu = (LinearLayout) findViewById(R.id.endMenu);
-                TextView scoreView = (TextView) findViewById(R.id.endScore);
-                TextView highView = (TextView) findViewById(R.id.highScore);
+                if(!paused){
+                    paused = true;
+                    LinearLayout endMenu = (LinearLayout) findViewById(R.id.endMenu);
+                    TextView scoreView = (TextView) findViewById(R.id.endScore);
+                    TextView highView = (TextView) findViewById(R.id.highScore);
 
-                scoreView.setText("Score: "+score);
-                endMenu.setVisibility(View.VISIBLE);
+                    scoreView.setText("Score: "+score);
+                    endMenu.setVisibility(View.VISIBLE);
 
-                SharedPreferences settings = getSharedPreferences(PREFS,0);
-                int highScore = settings.getInt("highScore", 0);
+                    SharedPreferences settings = getSharedPreferences(PREFS,0);
+                    int highScore = settings.getInt("highScore", 0);
 
-                highView.setText("Highscore: "+highScore);
+                    highView.setText("Highscore: "+highScore);
 
-                if(score > highScore){
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putInt("highScore", score);
-                    editor.commit();
+                    if(score > highScore){
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putInt("highScore", score);
+                        editor.commit();
+                    }
                 }
             }
         });

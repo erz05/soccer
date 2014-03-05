@@ -38,7 +38,7 @@ public class PowerBar {
 
     public void update(){
 
-        if(count > 15){
+        if(count > 10){
             power -= minus;
             if(power < 0){
                 power = 0;
