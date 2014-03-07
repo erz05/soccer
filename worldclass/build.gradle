@@ -22,10 +22,22 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    signingConfigs {
+        release {
+            storeFile file("worldclass.keystore")
+            storePassword "Er256zer"
+            keyAlias "worldclass"
+            keyPassword "Er256zer"
+        }
+    }
+
     buildTypes {
         release {
+            debuggable false
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.release
         }
     }
 }
