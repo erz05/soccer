@@ -45,7 +45,8 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         quit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onGameQuit();
+                //onGameQuit();
+                onGameMenu();
             }
         });
         resume.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +58,8 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onGameQuit();
+                //onGameQuit();
+                onGameMenu();
             }
         });
         restart.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +102,10 @@ public class MainActivity extends Activity implements MenuListener, GameListener
 
     @Override
     public void onPlay() {
+        SharedPreferences settings = getSharedPreferences(PREFS,0);
         game = new Game(this);
         game.setGameListener(this);
+        game.setOptions(settings.getBoolean("sound", false), settings.getBoolean("inverted",false));
         if(game != null){
             paused = false;
             FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
@@ -118,8 +122,10 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         if(game != null){
             gameFrame.removeView(game);
         }
+        SharedPreferences settings = getSharedPreferences(PREFS,0);
         game = new Game(this);
         game.setGameListener(this);
+        game.setOptions(settings.getBoolean("sound", false), settings.getBoolean("inverted",false));
         if(game != null){
             paused = false;
             gameFrame.addView(game);
@@ -139,7 +145,9 @@ public class MainActivity extends Activity implements MenuListener, GameListener
                     TextView highView = (TextView) findViewById(R.id.highScore);
 
                     scoreView.setText("Score: "+score);
-                    endMenu.setVisibility(View.VISIBLE);
+
+                    if(endMenu.getVisibility() == View.GONE)
+                        endMenu.setVisibility(View.VISIBLE);
 
                     SharedPreferences settings = getSharedPreferences(PREFS,0);
                     int highScore = settings.getInt("highScore", 0);
@@ -161,7 +169,21 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             game.resume();
             paused = false;
             LinearLayout pauseLayout = (LinearLayout) findViewById(R.id.pauseMenu);
+            LinearLayout endLayout = (LinearLayout) findViewById(R.id.endMenu);
             pauseLayout.setVisibility(View.GONE);
+            endLayout.setVisibility(View.GONE);
+        }
+    }
+
+    public void onGameMenu() {
+        if(menu != null){
+            LinearLayout pauseLayout = (LinearLayout) findViewById(R.id.pauseMenu);
+            LinearLayout endLayout = (LinearLayout) findViewById(R.id.endMenu);
+            pauseLayout.setVisibility(View.GONE);
+            endLayout.setVisibility(View.GONE);
+            FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
+            gameFrame.removeView(game);
+            gameFrame.addView(menu);
         }
     }
 

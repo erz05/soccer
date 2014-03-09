@@ -50,8 +50,8 @@ public class Floor {
 
     public void draw(Canvas canvas){
         update(canvas.getHeight());
-        if(yards != 0 && (yards % 10)==0)
-            canvas.drawLine(0,y,canvas.getWidth(),y,paint);
+        //if(yards != 0 && (yards % 10)==0)
+        //    canvas.drawLine(0,y,canvas.getWidth(),y,paint);
         canvas.drawText("Score: "+yards,spacing,spacing*2,paint);
     }
 

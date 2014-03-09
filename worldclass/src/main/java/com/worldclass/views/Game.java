@@ -47,6 +47,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
     private MediaPlayer hitSound;
     private MediaPlayer jumpSound;
 
+    private boolean playSound, invertControls;
+
     public Game(Context context) {
         super(context);
 
@@ -109,6 +111,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
         this.gameListener = gameListener;
     }
 
+    public void setOptions(boolean playSound, boolean invertControls){
+        this.playSound = playSound;
+        this.invertControls = invertControls;
+    }
+
     public int getScore(){
         if(floor != null)
             return floor.getYards();
@@ -137,9 +144,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
                         if(ball != null){
                             float half = getWidth()/2;
                             if(motionX  > half){
-                                ball.fling(MOVE_RIGHT, 0);
+                                ball.fling(MOVE_RIGHT, 0, invertControls);
                             }else if(motionX < half){
-                                ball.fling(MOVE_LEFT, 0);
+                                ball.fling(MOVE_LEFT, 0, invertControls);
                             }
                         }
                         if(floor != null)
@@ -244,7 +251,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
 
     @Override
     public void playSound(int sound) {
-        if(!isGameOver){
+        if(!isGameOver && playSound){
             switch (sound){
                 case SOUND_MOVE:
                     moveSound.start();

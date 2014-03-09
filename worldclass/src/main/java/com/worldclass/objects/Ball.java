@@ -121,24 +121,41 @@ public class Ball {
         }
     }
 
-    public void fling(int direction, float v) {
+    public void fling(int direction, float v, boolean invert) {
         if(!goingUp){
 //            if(listener != null){
 //                listener.playSound(Game.SOUND_HIT);
 //            }
-            switch (direction){
-                case Game.MOVE_LEFT:
-                    veloX -= speedx;
-                    if(rotateDirection > 0)
-                        rotateDirection = 0;
-                    rotateDirection += 2;
-                break;
-                case Game.MOVE_RIGHT:
-                    veloX += speedx;
-                    if(rotateDirection < 0)
-                        rotateDirection = 0;
-                    rotateDirection -= 2;
-                break;
+            if(invert){
+                switch (direction){
+                    case Game.MOVE_LEFT:
+                        veloX += speedx;
+                        if(rotateDirection > 0)
+                            rotateDirection = 0;
+                        rotateDirection += 2;
+                        break;
+                    case Game.MOVE_RIGHT:
+                        veloX -= speedx;
+                        if(rotateDirection < 0)
+                            rotateDirection = 0;
+                        rotateDirection -= 2;
+                        break;
+                }
+            }else {
+                switch (direction){
+                    case Game.MOVE_LEFT:
+                        veloX -= speedx;
+                        if(rotateDirection > 0)
+                            rotateDirection = 0;
+                        rotateDirection += 2;
+                    break;
+                    case Game.MOVE_RIGHT:
+                        veloX += speedx;
+                        if(rotateDirection < 0)
+                            rotateDirection = 0;
+                        rotateDirection -= 2;
+                    break;
+                }
             }
         }
     }
