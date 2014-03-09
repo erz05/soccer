@@ -91,8 +91,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
                 ball.draw(canvas);
 
             if(conesStars != null && ball != null && ball.getUpScale() == 1){
-                if(conesStars.checkCollision(ball.getBounds()))
+                if(conesStars.checkCollision(ball.getBounds())){
                     gameOver();
+                    ball.changeColor(Color.RED);
+                }
                 if(conesStars.checkStarCollision(ball.getBounds()))
                     powerBar.addPower();
             }
@@ -200,6 +202,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
         if(gameLoopThread != null && !gameLoopThread.isRunning()){
             gameLoopThread.setRunning(true);
             gameLoopThread.start();
+        }
+
+        if(ball != null){
+            ball.changeColor(Color.BLACK);
         }
     }
 

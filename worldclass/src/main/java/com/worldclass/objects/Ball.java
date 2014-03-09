@@ -2,6 +2,8 @@ package com.worldclass.objects;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.RectF;
 
 import com.worldclass.listeners.SoundListener;
@@ -29,6 +31,7 @@ public class Ball {
     private boolean onFloor = true;
     private int count = 0;
     private SoundListener listener;
+    private Paint paint;
 
     public Ball(float x, float y, int radius, boolean alive, Bitmap ballBitmap, int jumpHeight, float speedx){
         this.x = x;
@@ -41,6 +44,11 @@ public class Ball {
         this.speedx = speedx;
 
         ballRect = new RectF();
+
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setColor(Color.BLACK);
     }
 
     private void update(int width, int height){
@@ -96,8 +104,9 @@ public class Ball {
         update(canvas.getWidth(), canvas.getHeight());
 
         ballRect.set(x, y, x + diameter, y + diameter);
-        canvas.rotate(rotate,ballRect.centerX(),ballRect.centerY());
-        canvas.scale(upScale, upScale, x+radius, y+radius);
+        canvas.rotate(rotate, ballRect.centerX(), ballRect.centerY());
+        canvas.scale(upScale, upScale, x + radius, y + radius);
+        canvas.drawCircle(x+radius,y+radius,radius,paint);
         canvas.drawBitmap(ballBitmap, null, ballRect, null);
     }
 
@@ -162,5 +171,9 @@ public class Ball {
 
     public void setListener(SoundListener listener){
         this.listener = listener;
+}
+    
+    public void changeColor(int color){
+        paint.setColor(color);
     }
 }
