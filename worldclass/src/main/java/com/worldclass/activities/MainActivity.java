@@ -186,8 +186,4 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             gameFrame.addView(menu);
         }
     }
-
-    public void onGameQuit() {
-        onBackPressed();
-    }
 }

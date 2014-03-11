@@ -58,7 +58,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
 
         gameLoopThread = new GameLoopThread(this);
         holder = getHolder();
-        holder.addCallback(this);
+        if(holder != null)
+            holder.addCallback(this);
         detector = new GestureDetector(context, this);
     }
 
