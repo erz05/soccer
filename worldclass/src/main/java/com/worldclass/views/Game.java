@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -49,6 +50,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
 
     private boolean playSound, invertControls;
 
+    //count down
+    private Paint messagePaint;
+    private int countdown = 3;
+    private int time = 0;
+    private boolean startMoving = false;
+
     public Game(Context context) {
         super(context);
 
@@ -61,6 +68,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
         if(holder != null)
             holder.addCallback(this);
         detector = new GestureDetector(context, this);
+
+        messagePaint = new Paint();
+        messagePaint.setStrokeWidth(5);
+        messagePaint.setAntiAlias(true);
+        messagePaint.setColor(Color.WHITE);
+        messagePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        messagePaint.setTextSize(50);
     }
 
     @Override
@@ -69,25 +83,43 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
     }
 
     private void update(){
-
+        if(countdown > -1){
+            if(time > 60){
+                countdown -= 1;
+                time = 0;
+            }else {
+                time += 1;
+            }
+        }
     }
 
     @Override
     public void onDraw(Canvas canvas){
         if(canvas != null){
+            update();
             canvas.drawColor(Color.parseColor("#22B14C"));
             if(floor != null)
-                floor.draw(canvas);
+                floor.draw(canvas, startMoving);
+
+            if(countdown > -1){
+                if(countdown > 0){
+                    canvas.drawText(""+countdown, canvas.getWidth()/2, canvas.getHeight()/2, messagePaint);
+                }else {
+                    canvas.drawText("GO!", canvas.getWidth()/2, canvas.getHeight()/2, messagePaint);
+                }
+            }else {
+                startMoving = true;
+            }
 
             if(powerBar != null){
-                powerBar.draw(canvas);
+                powerBar.draw(canvas, startMoving);
                 if(powerBar.getPower() == 0){
                     gameOver();
                 }
             }
 
             if(conesStars != null)
-                conesStars.draw(canvas);
+                conesStars.draw(canvas, startMoving);
             if(ball != null)
                 ball.draw(canvas);
 

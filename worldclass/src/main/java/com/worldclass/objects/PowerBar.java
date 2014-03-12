@@ -48,8 +48,9 @@ public class PowerBar {
         count += 1;
     }
 
-    public void draw(Canvas canvas){
-        update();
+    public void draw(Canvas canvas, boolean startMoving){
+        if(startMoving)
+            update();
         canvas.drawRect(x,y,x+power,y+h,paint);
         canvas.drawRect(x,y,x+w,y+h,borderPaint);
     }

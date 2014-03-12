@@ -34,7 +34,8 @@ public class ConesStars {
         coneList = new LinkedList<Cone>();
         Cone cone;
         int posx = random.nextInt(w-size);
-        int posy = -h;
+        int posy = 0
+                ;
         for(int i=0; i<3; i++){
             cone = new Cone(posx,posy-size, size);
             coneList.add(cone);
@@ -61,8 +62,9 @@ public class ConesStars {
         updateVelo = true;
     }
 
-    public void draw(Canvas canvas){
-        update(canvas.getWidth(), canvas.getHeight());
+    public void draw(Canvas canvas, boolean startMoving){
+        if(startMoving)
+            update(canvas.getWidth(), canvas.getHeight());
         for(Cone cone: coneList){
             currentX = cone.x;
             currentY = cone.y;
