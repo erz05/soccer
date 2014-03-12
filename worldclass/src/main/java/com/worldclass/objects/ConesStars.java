@@ -34,7 +34,7 @@ public class ConesStars {
         coneList = new LinkedList<Cone>();
         Cone cone;
         int posx = random.nextInt(w-size);
-        int posy = 0;
+        int posy = -h;
         for(int i=0; i<3; i++){
             cone = new Cone(posx,posy-size, size);
             coneList.add(cone);

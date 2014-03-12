@@ -17,7 +17,9 @@ public class Cone {
     }
 
     public void update(float veloY, int w, int h){
-        y += veloY;
+        //y += veloY;
+        y += 20;
+
         if(y>h+size){
             y = 0-size*8;
 
