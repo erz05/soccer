@@ -156,13 +156,13 @@ public class Ball {
                         veloX -= speedx;
                         if(rotateDirection > 0)
                             rotateDirection = 0;
-                        rotateDirection += 2;
+                        rotateDirection -= 2;
                     break;
                     case Game.MOVE_RIGHT:
                         veloX += speedx;
                         if(rotateDirection < 0)
                             rotateDirection = 0;
-                        rotateDirection -= 2;
+                        rotateDirection += 2;
                     break;
                 }
             }
