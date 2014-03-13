@@ -16,9 +16,8 @@ public class Star {
         random = new Random();
     }
 
-    public void update(float veloY, int w, int h){
-        //y += veloY;
-        y += 20;
+    public void update(float topspeed, int w, int h){
+        y += topspeed;
         if(y>h+size){
             y = 0-size*8;
             visible = true;
@@ -28,9 +27,5 @@ public class Star {
                 x = w-size;
             }
         }
-    }
-
-    public void setVisible(boolean visible){
-        this.visible = visible;
     }
 }

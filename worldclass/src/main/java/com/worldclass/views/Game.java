@@ -26,7 +26,6 @@ import com.worldclass.utils.GameLoopThread;
  */
 public class Game extends SurfaceView implements SurfaceHolder.Callback, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, SoundListener {
 
-    private SurfaceHolder holder;
     private GameLoopThread gameLoopThread;
     private Ball ball;
     private Floor floor;
@@ -64,7 +63,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
         jumpSound = MediaPlayer.create(context, R.raw.jump);
 
         gameLoopThread = new GameLoopThread(this);
-        holder = getHolder();
+        SurfaceHolder holder = getHolder();
         if(holder != null)
             holder.addCallback(this);
         detector = new GestureDetector(context, this);
@@ -74,7 +73,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
         messagePaint.setAntiAlias(true);
         messagePaint.setColor(Color.WHITE);
         messagePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        messagePaint.setTextSize(50);
+        messagePaint.setTextSize(100);
     }
 
     @Override
@@ -84,7 +83,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
 
     private void update(){
         if(countdown > -1){
-            if(time > 60){
+            if(time > 30){
                 countdown -= 1;
                 time = 0;
             }else {
@@ -103,9 +102,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
 
             if(countdown > -1){
                 if(countdown > 0){
-                    canvas.drawText(""+countdown, canvas.getWidth()/2, canvas.getHeight()/2, messagePaint);
+                    canvas.drawText(""+countdown, canvas.getWidth()/2 - ((messagePaint.measureText(""+countdown))/2), canvas.getHeight()/2, messagePaint);
                 }else {
-                    canvas.drawText("GO!", canvas.getWidth()/2, canvas.getHeight()/2, messagePaint);
+                    canvas.drawText("GO!", canvas.getWidth()/2 - ((messagePaint.measureText("GO!"))/2), canvas.getHeight()/2, messagePaint);
                 }
             }else {
                 startMoving = true;
@@ -184,10 +183,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
                                 ball.fling(MOVE_LEFT, 0, invertControls);
                             }
                         }
-                        if(floor != null)
-                            floor.fling();
-                        if(conesStars != null)
-                            conesStars.fling();
                     }
 
                     break;
@@ -232,7 +227,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
         if(gameLoopThread == null){
             gameLoopThread = new GameLoopThread(this);
         }
-        if(gameLoopThread != null && !gameLoopThread.isRunning()){
+        if(!gameLoopThread.isRunning()){
             gameLoopThread.setRunning(true);
             gameLoopThread.start();
         }
@@ -265,7 +260,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
             gameLoopThread = null;
             gameLoopThread = new GameLoopThread(this);
         }
-        if(gameLoopThread != null && !gameLoopThread.isRunning()){
+        if(!gameLoopThread.isRunning()){
             gameLoopThread.setRunning(true);
             gameLoopThread.start();
         }
@@ -310,12 +305,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
         int radius = getHeight()/30;
         int coneSize = getHeight()/20;
         int jumpHeight = getHeight()/44;
-        int topSpeed = getHeight()/62;
+        int topSpeed = getHeight()/80;
 
         float speedX = getWidth()/185;
 
         int newX = getWidth()/2 - radius;
-        int newY = getHeight()/2 - radius;
 
         powerBar = new PowerBar(getWidth()/2+radius, radius, getWidth()/2-radius*2, radius);
         Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.soccer_ball);
@@ -342,6 +336,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
                     gameLoopThread.join();
                     retry = false;
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }

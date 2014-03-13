@@ -15,8 +15,6 @@ public class ConesStars {
     private LinkedList<Cone> coneList;
     //private LinkedList<Star> starList;
     private Star star;
-    private boolean updateVelo = true;
-    private float veloY = 0;
     private int topSpeed;
     private RectF currentRect;
     private float currentX, currentY, size;
@@ -40,6 +38,7 @@ public class ConesStars {
             cone = new Cone(posx,posy-size, size);
             coneList.add(cone);
             posy -= size*8;
+            posx = random.nextInt(w-size);
         }
 
         star = new Star(posx, posy, size);
@@ -49,17 +48,10 @@ public class ConesStars {
 
     public void update(int w, int h){
         for (Cone cone: coneList){
-            cone.update(veloY, w, h);
+            cone.update(topSpeed, w, h);
         }
 
-        star.update(veloY, w, h);
-
-        veloY -= .1;
-        if(veloY < 0){
-            veloY = 0;
-        }
-
-        updateVelo = true;
+        star.update(topSpeed, w, h);
     }
 
     public void draw(Canvas canvas, boolean startMoving){
@@ -75,15 +67,6 @@ public class ConesStars {
         if(star.visible){
             currentRect.set(star.x, star.y, star.x+size, star.y+size);
             canvas.drawBitmap(starBitmap, null, currentRect, null);
-        }
-    }
-
-    public void fling(){
-        if(updateVelo){
-            veloY += 3;
-            if(veloY > topSpeed)
-                veloY = topSpeed;
-            updateVelo = false;
         }
     }
 

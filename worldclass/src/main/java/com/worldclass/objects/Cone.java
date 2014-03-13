@@ -16,9 +16,8 @@ public class Cone {
         random = new Random();
     }
 
-    public void update(float veloY, int w, int h){
-        //y += veloY;
-        y += 20;
+    public void update(float topspeed, int w, int h){
+        y += topspeed;
 
         if(y>h+size){
             y = 0-size*8;

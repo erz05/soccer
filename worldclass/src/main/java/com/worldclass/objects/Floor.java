@@ -9,8 +9,6 @@ import android.graphics.Paint;
  */
 public class Floor {
 
-    private float veloY = 0;
-    private float yardHeight;
     private Paint paint;
 
     private float y, spacing;
@@ -19,7 +17,6 @@ public class Floor {
     private int topSpeed;
 
     public Floor(int height, int width, float textSize, int topSpeed){
-        yardHeight = height/10;
         y = 0;
         this.spacing = textSize;
         this.topSpeed = topSpeed;
@@ -35,17 +32,11 @@ public class Floor {
     }
 
     public void update(int h){
-        //y += veloY;
-        y += 20;
+        y += topSpeed;
 
         if(y > h){
             y = 0;
             yards += 1;
-        }
-
-        veloY -= .1;
-        if(veloY<0){
-            veloY = 0;
         }
     }
 
@@ -53,13 +44,6 @@ public class Floor {
         if(startMoving)
             update(canvas.getHeight());
         canvas.drawText("Score: "+yards,spacing,spacing*2,paint);
-    }
-
-    public void fling(){
-        veloY += 3;
-        if(veloY > topSpeed){
-            veloY = topSpeed;
-        }
     }
 
     public int getYards(){
