@@ -34,10 +34,11 @@ public class ConesStars {
         int posx = random.nextInt(w-size);
         int posy = 0
                 ;
-        for(int i=0; i<3; i++){
+        for(int i=0; i<4; i++){
             cone = new Cone(posx,posy-size, size);
             coneList.add(cone);
-            posy -= size*8;
+            if(i != 1)
+                posy -= size*8;
             posx = random.nextInt(w-size);
         }
 

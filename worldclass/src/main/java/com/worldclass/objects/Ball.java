@@ -139,13 +139,13 @@ public class Ball {
                 switch (direction){
                     case Game.MOVE_LEFT:
                         veloX += speedx;
-                        if(rotateDirection > 0)
+                        if(rotateDirection < 0)
                             rotateDirection = 0;
                         rotateDirection += 2;
                         break;
                     case Game.MOVE_RIGHT:
                         veloX -= speedx;
-                        if(rotateDirection < 0)
+                        if(rotateDirection > 0)
                             rotateDirection = 0;
                         rotateDirection -= 2;
                         break;
