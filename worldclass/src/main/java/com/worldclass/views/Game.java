@@ -35,7 +35,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
     private GameListener gameListener;
     private boolean isGameOver = false;
 
-    private float initX, initY;
+    private float initY;
 
     public final static int MOVE_LEFT = 0;
     public final static int MOVE_RIGHT = 1;
@@ -163,18 +163,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
 
             switch (event.getAction()){
                 case MotionEvent.ACTION_DOWN:
-                    initX = event.getX();
                     initY = event.getY();
                     break;
                 case MotionEvent.ACTION_MOVE:
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-
                     float motionX = event.getX();
-                    float motionY = event.getY();
-
-                    if(motionY > initY){
+                    if(event.getY() > initY){
                         if(ball != null){
                             float half = getWidth()/2;
                             if(motionX  > half){
@@ -184,10 +180,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Gesture
                             }
                         }
                     }
-
                     break;
             }
-
             return true;
         }
         return false;

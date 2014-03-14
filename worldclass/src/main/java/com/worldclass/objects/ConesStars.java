@@ -19,7 +19,6 @@ public class ConesStars {
     private RectF currentRect;
     private float currentX, currentY, size;
     private Bitmap coneBitmap, starBitmap;
-    private Random random;
 
     public ConesStars(int w, int h, int size, Bitmap coneBitmap, Bitmap starBitmap, int topSpeed){
         this.topSpeed = topSpeed;
@@ -27,24 +26,22 @@ public class ConesStars {
         this.coneBitmap = coneBitmap;
         this.starBitmap = starBitmap;
 
-        random  = new Random();
+        Random random = new Random();
 
         coneList = new LinkedList<Cone>();
         Cone cone;
-        int posx = random.nextInt(w-size);
-        int posy = 0
-                ;
+        int posx = random.nextInt(w - size);
+        int posy = 0;
+        currentRect = new RectF();
         for(int i=0; i<4; i++){
             cone = new Cone(posx,posy-size, size);
             coneList.add(cone);
             if(i != 1)
                 posy -= size*8;
-            posx = random.nextInt(w-size);
+            posx = random.nextInt(w - size);
         }
 
         star = new Star(posx, posy, size);
-
-        currentRect = new RectF();
     }
 
     public void update(int w, int h){
