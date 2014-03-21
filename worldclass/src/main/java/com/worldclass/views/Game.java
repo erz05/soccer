@@ -26,7 +26,6 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
     private ConesStars conesStars;
     private GestureDetector detector;
     private GameListener gameListener;
-    private boolean isGameOver = false;
 
     private float initY;
 
@@ -63,7 +62,6 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
             if(conesStars != null && ball != null && ball.getUpScale() == 1){
                 if(conesStars.checkCollision(ball.getBounds())){
                     if(gameListener != null){
-                        isGameOver = true;
                         gameListener.onGameOver();
                     }
                     ball.changeColor(Color.RED);
@@ -104,7 +102,7 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        if(!isGameOver){
+        if(!gameListener.getIsGameOver()){
             detector.onTouchEvent(event);
 
             switch (event.getAction()){
@@ -191,7 +189,7 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
 
     @Override
     public void playSound(int sound) {
-        if(!isGameOver && playSound){
+        if(playSound){
             gameListener.playSound(sound);
         }
     }

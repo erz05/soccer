@@ -8,4 +8,5 @@ public interface GameListener {
     public void addPower();
     public boolean isMoving();
     public void playSound(int sound);
+    public boolean getIsGameOver();
 }

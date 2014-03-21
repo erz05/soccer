@@ -20,6 +20,13 @@ import com.worldclass.views.Background;
 import com.worldclass.views.Game;
 import com.worldclass.views.Menu;
 
+/*TODO
+1. use different way to calculate score, use time?
+2. have background stay, dont add or remove, just call reset when need too?
+3. game reset instaed of adding and removing everytime
+4. fix menu's
+ */
+
 public class MainActivity extends Activity implements MenuListener, GameListener, BackgroundListener {
     private Game game;
     private Background background;
@@ -33,6 +40,8 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     private MediaPlayer moveSound;
     private MediaPlayer hitSound;
     private MediaPlayer jumpSound;
+
+    private boolean isGameOver = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +128,7 @@ public class MainActivity extends Activity implements MenuListener, GameListener
 
     @Override
     public void onPlay() {
+        isGameOver = false;
         SharedPreferences settings = getSharedPreferences(PREFS,0);
         game = new Game(this);
         game.setGameListener(this);
@@ -139,6 +149,7 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     }
 
     public void restartGame() {
+        isGameOver = false;
         LinearLayout endMenu = (LinearLayout) findViewById(R.id.endMenu);
         endMenu.setVisibility(View.GONE);
         FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
@@ -168,6 +179,7 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     @Override
     public void onGameOver(final int score) {
         playSound(SOUND_HIT);
+        isGameOver = true;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -227,6 +239,7 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     @Override
     public void onGameOver() {
         playSound(SOUND_HIT);
+        isGameOver = true;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -263,7 +276,8 @@ public class MainActivity extends Activity implements MenuListener, GameListener
 
     @Override
     public void addPower() {
-
+        if(background != null)
+            background.addPower();
     }
 
     @Override
@@ -275,16 +289,23 @@ public class MainActivity extends Activity implements MenuListener, GameListener
 
     @Override
     public void playSound(int sound) {
-        switch (sound){
-            case SOUND_MOVE:
-                moveSound.start();
-                break;
-            case SOUND_HIT:
-                hitSound.start();
-                break;
-            case SOUND_JUMP:
-                jumpSound.start();
-                break;
+        if(!isGameOver){
+            switch (sound){
+                case SOUND_MOVE:
+                    moveSound.start();
+                    break;
+                case SOUND_HIT:
+                    hitSound.start();
+                    break;
+                case SOUND_JUMP:
+                    jumpSound.start();
+                    break;
+            }
         }
+    }
+
+    @Override
+    public boolean getIsGameOver() {
+        return isGameOver;
     }
 }
