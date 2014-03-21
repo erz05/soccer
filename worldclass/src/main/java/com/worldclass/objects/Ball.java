@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
+import com.worldclass.activities.MainActivity;
 import com.worldclass.listeners.SoundListener;
 import com.worldclass.views.Game;
 
@@ -125,7 +126,7 @@ public class Ball {
             rotateDirection = 0;
             veloX = 0;
             if(listener != null){
-                listener.playSound(Game.SOUND_JUMP);
+                listener.playSound(MainActivity.SOUND_JUMP);
             }
         }
     }

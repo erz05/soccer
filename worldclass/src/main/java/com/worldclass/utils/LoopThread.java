@@ -2,18 +2,18 @@ package com.worldclass.utils;
 
 import android.graphics.Canvas;
 
-import com.worldclass.views.Game;
+import com.worldclass.views.MyView;
 
 /**
- * Created by erz on 2/19/14.
+ * Created by erz on 3/20/14.
  */
-public class GameLoopThread extends Thread {
+public class LoopThread extends Thread {
     static final long FPS = 60;
-    private Game game;
     private boolean running = false;
+    private MyView myView;
 
-    public GameLoopThread(Game game){
-        this.game = game;
+    public LoopThread(MyView myView){
+        this.myView = myView;
     }
 
     public void setRunning(boolean run){
@@ -33,13 +33,13 @@ public class GameLoopThread extends Thread {
             Canvas c = null;
             startTime = System.currentTimeMillis();
             try {
-                c = game.getHolder().lockCanvas();
-                synchronized (game.getHolder()) {
-                    game.onDraw(c);
+                c = myView.getHolder().lockCanvas();
+                synchronized (myView.getHolder()) {
+                    myView.onDraw(c);
                 }
             } finally {
                 if (c != null) {
-                    game.getHolder().unlockCanvasAndPost(c);
+                    myView.getHolder().unlockCanvasAndPost(c);
                 }
             }
             sleepTime = ticksPS-(System.currentTimeMillis() - startTime);
