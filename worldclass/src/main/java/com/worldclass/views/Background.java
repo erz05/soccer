@@ -31,7 +31,7 @@ public class Background extends MyView {
     final MovingPoint mPoint1 = new MovingPoint();
     final MovingPoint mPoint2 = new MovingPoint();
 
-    static final int NUM_OLD = 100;
+    static final int NUM_OLD = 50;
     int mNumOld = 0;
     final float[] mOld = new float[NUM_OLD*4];
     final int[] mOldColor = new int[NUM_OLD];
@@ -52,7 +52,7 @@ public class Background extends MyView {
         messagePaint.setStrokeWidth(5);
         messagePaint.setAntiAlias(true);
         messagePaint.setColor(Color.WHITE);
-        messagePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        messagePaint.setStyle(Paint.Style.STROKE);
         messagePaint.setTextSize(100);
 
         mLineWidth = (int)(getResources().getDisplayMetrics().density * 1.5);
@@ -64,6 +64,7 @@ public class Background extends MyView {
         mForeground.setColor(0xff00ffff);
         mForeground.setAntiAlias(false);
         mForeground.setStrokeWidth(mLineWidth);
+        mForeground.setStyle(Paint.Style.STROKE);
     }
 
     public void setBackgroundListener(BackgroundListener backgroundListener){
@@ -124,7 +125,8 @@ public class Background extends MyView {
                 mForeground.setColor(mOldColor[i] | makeGreen(i));
                 mForeground.setAlpha(((NUM_OLD-i) * 255) / NUM_OLD);
                 int p = i*4;
-                canvas.drawLine(mOld[p], mOld[p+1], mOld[p+2], mOld[p+3], mForeground);
+                canvas.drawRect(mOld[p], mOld[p+1], mOld[p+2], mOld[p+3], mForeground);
+                //canvas.drawCircle((mOld[p]+mOld[p+2])/2,(mOld[p+1]+mOld[p+3])/2,Math.min((mOld[p]+mOld[p+2])/2,(mOld[p+1]+mOld[p+3])/2), mForeground );
             }
 
             // Draw new line.
@@ -134,7 +136,8 @@ public class Background extends MyView {
             if (blue > 255) blue = 255;
             int color = 0xff000000 | (red<<16) | blue;
             mForeground.setColor(color | makeGreen(-2));
-            canvas.drawLine(mPoint1.x, mPoint1.y, mPoint2.x, mPoint2.y, mForeground);
+            canvas.drawRect(mPoint1.x, mPoint1.y, mPoint2.x, mPoint2.y, mForeground);
+            //canvas.drawCircle((mPoint1.x+mPoint2.x)/2,(mPoint1.y+mPoint2.y)/2,50, mForeground );
 
             // Add in the new line.
             if (mNumOld > 1) {
