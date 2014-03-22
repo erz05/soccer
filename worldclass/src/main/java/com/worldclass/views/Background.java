@@ -21,6 +21,8 @@ public class Background extends MyView {
     private int countdown = 3;
     private int time = 0;
 
+    private boolean gameStarted = false;
+
     int mLineWidth;
     float mMinStep;
     float mMaxStep;
@@ -77,12 +79,14 @@ public class Background extends MyView {
     }
 
     private void update(int width, int height){
-        if(countdown > -1){
-            if(time > 30){
-                countdown -= 1;
-                time = 0;
-            }else {
-                time += 1;
+        if(gameStarted){
+            if(countdown > -1){
+                if(time > 30){
+                    countdown -= 1;
+                    time = 0;
+                }else {
+                    time += 1;
+                }
             }
         }
 
@@ -115,18 +119,6 @@ public class Background extends MyView {
         if(canvas != null){
             update(canvas.getWidth(), canvas.getHeight());
             canvas.drawColor(Color.BLACK);
-            if(floor != null)
-                floor.draw(canvas, startMoving);
-
-            if(countdown > -1){
-                if(countdown > 0){
-                    canvas.drawText(""+countdown, canvas.getWidth()/2 - ((messagePaint.measureText(""+countdown))/2), canvas.getHeight()/2, messagePaint);
-                }else {
-                    canvas.drawText("GO!", canvas.getWidth()/2 - ((messagePaint.measureText("GO!"))/2), canvas.getHeight()/2, messagePaint);
-                }
-            }else {
-                startMoving = true;
-            }
 
             for (int i=mNumOld-1; i>=0; i--) {
                 mForeground.setColor(mOldColor[i] | makeGreen(i));
@@ -156,19 +148,43 @@ public class Background extends MyView {
             mOld[3] = mPoint2.y;
             mOldColor[0] = color;
 
-            if(powerBar != null){
-                powerBar.draw(canvas, startMoving);
-                if(powerBar.getPower() == 0){
-                    if(backgroundListener != null){
-                        int score = 0;
-                        if(floor != null){
-                            score = floor.getYards();
+            if(gameStarted){
+                if(floor != null)
+                    floor.draw(canvas, startMoving);
+
+                if(countdown > -1){
+                    if(countdown > 0){
+                        canvas.drawText(""+countdown, canvas.getWidth()/2 - ((messagePaint.measureText(""+countdown))/2), canvas.getHeight()/2, messagePaint);
+                    }else {
+                        canvas.drawText("GO!", canvas.getWidth()/2 - ((messagePaint.measureText("GO!"))/2), canvas.getHeight()/2, messagePaint);
+                    }
+                }else {
+                    startMoving = true;
+                }
+
+                if(powerBar != null){
+                    powerBar.draw(canvas, startMoving);
+                    if(powerBar.getPower() == 0){
+                        if(backgroundListener != null){
+                            int score = 0;
+                            if(floor != null){
+                                score = floor.getYards();
+                            }
+                            backgroundListener.onGameOver(score);
                         }
-                        backgroundListener.onGameOver(score);
                     }
                 }
             }
         }
+    }
+
+    public void reset(){
+        startMoving = false;
+        countdown = 3;
+        time = 0;
+        gameStarted = false;
+        floor.reset();
+        powerBar.reset();
     }
 
     public int getScore(){
@@ -180,6 +196,18 @@ public class Background extends MyView {
     public void addPower() {
         if(powerBar != null)
             powerBar.addPower();
+    }
+
+    public void setGameStarted(boolean gameStarted){
+        this.gameStarted = gameStarted;
+    }
+
+    public void gamePaused(){
+        this.gameStarted = false;
+    }
+
+    public void gameResume(){
+        this.gameStarted = true;
     }
 
     static final class MovingPoint {

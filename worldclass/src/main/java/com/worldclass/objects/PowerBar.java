@@ -65,4 +65,9 @@ public class PowerBar {
     public float getPower(){
         return power;
     }
+
+    public void reset() {
+        count = 0;
+        power = w;
+    }
 }

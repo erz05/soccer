@@ -54,8 +54,12 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
         menu = new Menu(this);
         menu.setListener(this);
+        background = new Background(this);
+        background.setBackgroundListener(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         menu.setLayoutParams(params);
+        gameFrame.addView(background);
+        background.start();
         gameFrame.addView(menu);
 
         Button quit = (Button) findViewById(R.id.quitButton);
@@ -101,7 +105,7 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         }else {
             if(game != null){
                 game.pause();
-                background.pause();
+                background.gamePaused();
                 paused = true;
                 LinearLayout pauseLayout = (LinearLayout) findViewById(R.id.pauseMenu);
                 pauseLayout.setVisibility(View.VISIBLE);
@@ -133,18 +137,16 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         game = new Game(this);
         game.setGameListener(this);
         game.setOptions(settings.getBoolean("sound", false), settings.getBoolean("inverted",false));
-        background = new Background(this);
-        background.setBackgroundListener(this);
         if(game != null){
             paused = false;
             FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
             gameFrame.removeView(menu);
-            if(background != null){
-                gameFrame.addView(background);
-                background.start();
-            }
             gameFrame.addView(game);
             game.start();
+        }
+        if(background != null){
+            background.reset();
+            background.gameResume();
         }
     }
 
@@ -156,30 +158,37 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         if(game != null){
             gameFrame.removeView(game);
         }
-        if(background != null){
-            gameFrame.removeView(background);
-        }
         SharedPreferences settings = getSharedPreferences(PREFS,0);
         game = new Game(this);
         game.setGameListener(this);
         game.setOptions(settings.getBoolean("sound", false), settings.getBoolean("inverted",false));
-        background = new Background(this);
-        background.setBackgroundListener(this);
-        if(background != null){
-            gameFrame.addView(background);
-            background.start();
-        }
         if(game != null){
             paused = false;
             gameFrame.addView(game);
             game.start();
         }
+        if(background != null){
+            background.reset();
+            background.gameResume();
+        }
+    }
+
+    @Override
+    public void onGameOver(){
+        int score = 0;
+        if(background != null){
+            score = background.getScore();
+        }
+        onGameOver(score);
     }
 
     @Override
     public void onGameOver(final int score) {
         playSound(SOUND_HIT);
         isGameOver = true;
+        if(background != null){
+            background.reset();
+        }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -213,7 +222,7 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         if(game != null){
             game.resume();
             if(background != null){
-                background.resume();
+                background.gameResume();
             }
             paused = false;
             LinearLayout pauseLayout = (LinearLayout) findViewById(R.id.pauseMenu);
@@ -231,47 +240,8 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             endLayout.setVisibility(View.GONE);
             FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
             gameFrame.removeView(game);
-            gameFrame.removeView(background);
             gameFrame.addView(menu);
         }
-    }
-
-    @Override
-    public void onGameOver() {
-        playSound(SOUND_HIT);
-        isGameOver = true;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(!paused){
-                    paused = true;
-                    LinearLayout endMenu = (LinearLayout) findViewById(R.id.endMenu);
-                    TextView scoreView = (TextView) findViewById(R.id.endScore);
-                    TextView highView = (TextView) findViewById(R.id.highScore);
-
-                    int score = 0;
-                    if(background != null){
-                        score = background.getScore();
-                    }
-
-                    scoreView.setText("Score: "+score);
-
-                    if(endMenu.getVisibility() == View.GONE)
-                        endMenu.setVisibility(View.VISIBLE);
-
-                    SharedPreferences settings = getSharedPreferences(PREFS,0);
-                    int highScore = settings.getInt("highScore", 0);
-
-                    highView.setText("Highscore: "+highScore);
-
-                    if(score > highScore){
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putInt("highScore", score);
-                        editor.commit();
-                    }
-                }
-            }
-        });
     }
 
     @Override

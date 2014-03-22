@@ -49,4 +49,9 @@ public class Floor {
     public int getYards(){
         return yards;
     }
+
+    public void reset(){
+        y = 0;
+        yards = 0;
+    }
 }
