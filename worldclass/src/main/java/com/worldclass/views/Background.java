@@ -9,6 +9,8 @@ import com.worldclass.listeners.BackgroundListener;
 import com.worldclass.objects.Floor;
 import com.worldclass.objects.PowerBar;
 
+import java.util.Random;
+
 /**
  * Created by erz on 3/20/14.
  */
@@ -20,6 +22,9 @@ public class Background extends MyView {
     private Paint messagePaint;
     private int countdown = 3;
     private int time = 0;
+    private int visual;
+    private Random random;
+    private boolean changeVisual;
 
     private boolean gameStarted = false;
 
@@ -65,6 +70,9 @@ public class Background extends MyView {
         mForeground.setAntiAlias(false);
         mForeground.setStrokeWidth(mLineWidth);
         mForeground.setStyle(Paint.Style.STROKE);
+
+        random = new Random();
+        visual = random.nextInt(3);
     }
 
     public void setBackgroundListener(BackgroundListener backgroundListener){
@@ -125,8 +133,17 @@ public class Background extends MyView {
                 mForeground.setColor(mOldColor[i] | makeGreen(i));
                 mForeground.setAlpha(((NUM_OLD-i) * 255) / NUM_OLD);
                 int p = i*4;
-                canvas.drawRect(mOld[p], mOld[p+1], mOld[p+2], mOld[p+3], mForeground);
-                //canvas.drawCircle((mOld[p]+mOld[p+2])/2,(mOld[p+1]+mOld[p+3])/2,Math.min((mOld[p]+mOld[p+2])/2,(mOld[p+1]+mOld[p+3])/2), mForeground );
+                switch (visual){
+                    case 0:
+                        canvas.drawLine(mOld[p], mOld[p+1], mOld[p+2], mOld[p+3], mForeground);
+                        break;
+                    case 1:
+                        canvas.drawRect(mOld[p], mOld[p+1], mOld[p+2], mOld[p+3], mForeground);
+                        break;
+                    case 2:
+                        canvas.drawCircle((mOld[p] + mOld[p + 2]) / 2, (mOld[p + 1] + mOld[p + 3]) / 2, Math.min((mOld[p] + mOld[p + 2]) / 2, (mOld[p + 1] + mOld[p + 3]) / 2), mForeground);
+                        break;
+                }
             }
 
             // Draw new line.
@@ -136,8 +153,17 @@ public class Background extends MyView {
             if (blue > 255) blue = 255;
             int color = 0xff000000 | (red<<16) | blue;
             mForeground.setColor(color | makeGreen(-2));
-            canvas.drawRect(mPoint1.x, mPoint1.y, mPoint2.x, mPoint2.y, mForeground);
-            //canvas.drawCircle((mPoint1.x+mPoint2.x)/2,(mPoint1.y+mPoint2.y)/2,50, mForeground );
+            switch (visual){
+                case 0:
+                    canvas.drawLine(mPoint1.x, mPoint1.y, mPoint2.x, mPoint2.y, mForeground);
+                    break;
+                case 1:
+                    canvas.drawRect(mPoint1.x, mPoint1.y, mPoint2.x, mPoint2.y, mForeground);
+                    break;
+                case 2:
+                    canvas.drawCircle((mPoint1.x + mPoint2.x) / 2, (mPoint1.y + mPoint2.y) / 2, Math.min((mPoint1.x + mPoint2.x) / 2,(mPoint1.y + mPoint2.y) / 2), mForeground);
+                    break;
+            }
 
             // Add in the new line.
             if (mNumOld > 1) {
@@ -152,8 +178,16 @@ public class Background extends MyView {
             mOldColor[0] = color;
 
             if(gameStarted){
-                if(floor != null)
+                if(floor != null){
                     floor.draw(canvas, startMoving);
+                    int m = floor.getYards()%5;
+                    if(changeVisual && m == 0){
+                        visual = random.nextInt(3);
+                        changeVisual = false;
+                    }else if(m == 1) {
+                        changeVisual = true;
+                    }
+                }
 
                 if(countdown > -1){
                     if(countdown > 0){
