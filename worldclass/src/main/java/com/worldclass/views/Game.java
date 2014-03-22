@@ -32,7 +32,7 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
     public final static int MOVE_LEFT = 0;
     public final static int MOVE_RIGHT = 1;
 
-    private boolean playSound, invertControls;
+    private boolean invertControls;
 
     public Game(Context context) {
         super(context);
@@ -95,8 +95,7 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
         this.gameListener = gameListener;
     }
 
-    public void setOptions(boolean playSound, boolean invertControls){
-        this.playSound = playSound;
+    public void setOptions(boolean invertControls){
         this.invertControls = invertControls;
     }
 
@@ -189,8 +188,6 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
 
     @Override
     public void playSound(int sound) {
-        if(playSound){
-            gameListener.playSound(sound);
-        }
+        gameListener.playSound(sound);
     }
 }

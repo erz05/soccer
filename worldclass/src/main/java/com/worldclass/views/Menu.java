@@ -80,6 +80,9 @@ public class Menu extends LinearLayout {
     }
 
     public void setSound(boolean b){
+        if(listener != null){
+            listener.playMusic(b);
+        }
         SharedPreferences settings = context.getSharedPreferences(PREFS, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("sound", b);
