@@ -17,6 +17,8 @@ import com.worldclass.listeners.BackgroundListener;
 import com.worldclass.listeners.GameListener;
 import com.worldclass.listeners.MenuListener;
 import com.worldclass.utils.MusicPlayer;
+import com.worldclass.utils.MyGLRenderer;
+import com.worldclass.utils.MyGLSurfaceView;
 import com.worldclass.views.Background;
 import com.worldclass.views.Game;
 import com.worldclass.views.Menu;
@@ -37,6 +39,8 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     private final String PREFS = "preferencesFile";
     private MusicPlayer musicPlayer;
     private boolean playSounds;
+
+    private MyGLSurfaceView myGLSurfaceView;
 
     private boolean isGameOver = false;
 
@@ -100,6 +104,12 @@ public class MainActivity extends Activity implements MenuListener, GameListener
 
         //Ndk test
         Log.v("DELETE_THIS", getStringFromNative());
+
+        myGLSurfaceView = new MyGLSurfaceView(this);
+        myGLSurfaceView.setEGLContextClientVersion(2);
+        myGLSurfaceView.setRenderer(new MyGLRenderer());
+
+        gameFrame.addView(myGLSurfaceView);
     }
 
     @Override
@@ -107,6 +117,7 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         super.onResume();
         if(playSounds && musicPlayer != null)
             musicPlayer.playMusic();
+        myGLSurfaceView.onResume();
     }
 
     @Override
@@ -114,6 +125,7 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         super.onPause();
         if(musicPlayer != null)
             musicPlayer.pauseMusic();
+        myGLSurfaceView.onPause();
     }
 
     @Override
