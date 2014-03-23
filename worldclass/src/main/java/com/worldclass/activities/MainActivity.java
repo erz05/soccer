@@ -3,6 +3,7 @@ package com.worldclass.activities;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,10 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     private boolean playSounds;
 
     private boolean isGameOver = false;
+
+    static  {
+        System.loadLibrary("MyLib");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +97,9 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         SharedPreferences settings = getSharedPreferences(PREFS,0);
         playSounds = settings.getBoolean("sound", false);
         musicPlayer = new MusicPlayer(this);
+
+        //Ndk test
+        Log.v("DELETE_THIS", getStringFromNative());
     }
 
     @Override
@@ -293,4 +301,6 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     public boolean getIsGameOver() {
         return isGameOver;
     }
+
+    public native String getStringFromNative();
 }
