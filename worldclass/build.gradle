@@ -27,6 +27,54 @@ android {
         }
     }
 
+    // This actual the app version code. Our given range is [0, 99999]
+    defaultConfig.versionCode = 123
+
+    // 2 dimensions of flavors. API is more important than ABI.
+    flavorGroups "abi"
+
+    productFlavors {
+        x86 {
+            flavorGroup "abi"
+            ndk {
+                abiFilter "x86"
+            }
+            // this is the flavor part of the version code.
+            // It must be higher than the arm one for devices supporting
+            // both, as x86 is preferred.
+            versionCode = 3
+        }
+        arm {
+            flavorGroup "abi"
+            ndk {
+                abiFilter "armeabi-v7a"
+            }
+            versionCode = 2
+        }
+        mips {
+            flavorGroup "abi"
+            ndk {
+                abiFilter "mips"
+            }
+            versionCode = 1
+        }
+        fat {
+            flavorGroup "abi"
+            // fat binary, lowest version code to be
+            // the last option
+            versionCode = 0
+        }
+    }
+
+    // make per-variant version code
+    applicationVariants.all { variant ->
+        // get the version code of each flavor
+        def abiVersion = variant.productFlavors.get(0).versionCode
+
+        // set the composite code
+        variant.mergedFlavor.versionCode = abiVersion * 1000000 + defaultConfig.versionCode
+    }
+
     signingConfigs {
         release {
             storeFile file("worldclass.keystore")
