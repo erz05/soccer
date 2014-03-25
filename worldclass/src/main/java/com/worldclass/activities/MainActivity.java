@@ -63,9 +63,9 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         background.setBackgroundListener(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         menu.setLayoutParams(params);
-        gameFrame.addView(background);
+        //gameFrame.addView(background);
         background.start();
-        gameFrame.addView(menu);
+        //gameFrame.addView(menu);
 
         Button quit = (Button) findViewById(R.id.quitButton);
         Button resume = (Button) findViewById(R.id.resumeButton);
