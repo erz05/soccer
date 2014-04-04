@@ -7,7 +7,6 @@ import android.graphics.Paint;
 
 import com.worldclass.listeners.BackgroundListener;
 import com.worldclass.objects.Floor;
-import com.worldclass.objects.PowerBar;
 
 import java.util.Random;
 
@@ -17,7 +16,6 @@ import java.util.Random;
 public class Background extends MyView {
 
     private Floor floor;
-    private PowerBar powerBar;
     public boolean startMoving = false;
     private Paint messagePaint;
     private int countdown = 3;
@@ -84,7 +82,6 @@ public class Background extends MyView {
         int radius = getHeight()/30;
         int topSpeed = getHeight()/80;
         floor = new Floor(getHeight(), getWidth(), radius, topSpeed);
-        powerBar = new PowerBar(getWidth()/2+radius, radius, getWidth()/2-radius*2, radius);
     }
 
     private void update(int width, int height){
@@ -198,19 +195,6 @@ public class Background extends MyView {
                 }else {
                     startMoving = true;
                 }
-
-                if(powerBar != null){
-                    powerBar.draw(canvas, startMoving);
-                    if(powerBar.getPower() == 0){
-                        if(backgroundListener != null){
-                            int score = 0;
-                            if(floor != null){
-                                score = floor.getYards();
-                            }
-                            backgroundListener.onGameOver(score);
-                        }
-                    }
-                }
             }
         }
     }
@@ -221,18 +205,12 @@ public class Background extends MyView {
         time = 0;
         gameStarted = false;
         floor.reset();
-        powerBar.reset();
     }
 
     public int getScore(){
         if(floor != null)
             return floor.getYards();
         return 0;
-    }
-
-    public void addPower() {
-        if(powerBar != null)
-            powerBar.addPower();
     }
 
     public void setGameStarted(boolean gameStarted){

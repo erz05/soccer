@@ -270,12 +270,6 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     }
 
     @Override
-    public void addPower() {
-        if(background != null)
-            background.addPower();
-    }
-
-    @Override
     public boolean isMoving() {
         if(background != null)
             return background.startMoving;

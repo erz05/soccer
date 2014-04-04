@@ -5,7 +5,6 @@ package com.worldclass.listeners;
  */
 public interface GameListener {
     public void onGameOver();
-    public void addPower();
     public boolean isMoving();
     public void playSound(int sound);
     public boolean getIsGameOver();

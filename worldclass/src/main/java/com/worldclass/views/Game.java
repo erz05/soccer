@@ -15,7 +15,7 @@ import com.worldclass.R;
 import com.worldclass.listeners.GameListener;
 import com.worldclass.listeners.SoundListener;
 import com.worldclass.objects.Ball;
-import com.worldclass.objects.ConesStars;
+import com.worldclass.objects.ConeList;
 
 /**
  * Created by erz on 2/19/14.
@@ -23,7 +23,7 @@ import com.worldclass.objects.ConesStars;
 public class Game extends MyView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, SoundListener {
 
     private Ball ball;
-    private ConesStars conesStars;
+    private ConeList coneList;
     private GestureDetector detector;
     private GameListener gameListener;
 
@@ -54,20 +54,18 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
             //canvas.drawColor(Color.parseColor("#22B14C"));
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
-            if(conesStars != null)
-                conesStars.draw(canvas, gameListener.isMoving());
+            if(coneList != null)
+                coneList.draw(canvas, gameListener.isMoving());
             if(ball != null)
                 ball.draw(canvas);
 
-            if(conesStars != null && ball != null && ball.getUpScale() == 1){
-                if(conesStars.checkCollision(ball.getBounds())){
+            if(coneList != null && ball != null && ball.getUpScale() == 1){
+                if(coneList.checkCollision(ball.getBounds())){
                     if(gameListener != null){
                         gameListener.onGameOver();
                     }
                     ball.changeColor(Color.RED);
                 }
-                if(conesStars.checkStarCollision(ball.getBounds()))
-                    gameListener.addPower();
             }
         }
     }
@@ -87,8 +85,7 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
         ball = new Ball(newX,getHeight()-(radius*4),radius,true,ballBitmap,jumpHeight, speedX);
         ball.setListener(this);
         Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cone);
-        Bitmap starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.star);
-        conesStars = new ConesStars(getWidth(), getHeight(), coneSize, coneBitmap, starBitmap, topSpeed);
+        coneList = new ConeList(getWidth(), getHeight(), coneSize, coneBitmap, topSpeed);
     }
 
     public void setGameListener(GameListener gameListener){

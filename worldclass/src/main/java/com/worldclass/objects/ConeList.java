@@ -10,21 +10,18 @@ import java.util.Random;
 /**
  * Created by erz on 2/25/14.
  */
-public class ConesStars {
+public class ConeList {
 
     private LinkedList<Cone> coneList;
-    //private LinkedList<Star> starList;
-    private Star star;
     private int topSpeed;
     private RectF currentRect;
     private float currentX, currentY, size;
-    private Bitmap coneBitmap, starBitmap;
+    private Bitmap coneBitmap;
 
-    public ConesStars(int w, int h, int size, Bitmap coneBitmap, Bitmap starBitmap, int topSpeed){
+    public ConeList(int w, int h, int size, Bitmap coneBitmap, int topSpeed){
         this.topSpeed = topSpeed;
         this.size = size;
         this.coneBitmap = coneBitmap;
-        this.starBitmap = starBitmap;
 
         Random random = new Random();
 
@@ -40,16 +37,12 @@ public class ConesStars {
                 posy -= size*8;
             posx = random.nextInt(w - size);
         }
-
-        star = new Star(posx, posy, size);
     }
 
     public void update(int w, int h){
         for (Cone cone: coneList){
             cone.update(topSpeed, w, h);
         }
-
-        star.update(topSpeed, w, h);
     }
 
     public void draw(Canvas canvas, boolean startMoving){
@@ -61,11 +54,6 @@ public class ConesStars {
             currentRect.set(currentX, currentY, currentX+size, currentY+size);
             canvas.drawBitmap(coneBitmap, null, currentRect, null);
         }
-
-        if(star.visible){
-            currentRect.set(star.x, star.y, star.x+size, star.y+size);
-            canvas.drawBitmap(starBitmap, null, currentRect, null);
-        }
     }
 
     public boolean checkCollision(RectF ballRect){
@@ -76,15 +64,6 @@ public class ConesStars {
             if(currentRect.intersect(ballRect)){
                 return true;
             }
-        }
-        return false;
-    }
-
-    public boolean checkStarCollision(RectF ballRect){
-        currentRect.set(star.x, star.y, star.x+size, star.y+size);
-        if(currentRect.intersect(ballRect)){
-            star.visible = false;
-            return true;
         }
         return false;
     }
