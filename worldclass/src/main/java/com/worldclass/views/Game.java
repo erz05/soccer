@@ -51,7 +51,6 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
     @Override
     public void onDraw(Canvas canvas){
         if(canvas != null){
-            //canvas.drawColor(Color.parseColor("#22B14C"));
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
             if(coneList != null)
@@ -114,9 +113,9 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
                         if(ball != null){
                             float half = getWidth()/2;
                             if(motionX  > half){
-                                ball.fling(MOVE_RIGHT, 0, invertControls);
+                                ball.fling(MOVE_RIGHT, invertControls);
                             }else if(motionX < half){
-                                ball.fling(MOVE_LEFT, 0, invertControls);
+                                ball.fling(MOVE_LEFT, invertControls);
                             }
                         }
                     }
@@ -160,7 +159,6 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
     @Override
     public void start(){
         super.start();
-
         if(ball != null){
             ball.changeColor(Color.BLACK);
         }

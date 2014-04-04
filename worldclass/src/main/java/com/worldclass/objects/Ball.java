@@ -53,7 +53,7 @@ public class Ball {
         paint.setColor(Color.BLACK);
     }
 
-    private void update(int width, int height){
+    private void update(int width){
 
         x += veloX;
 
@@ -103,7 +103,7 @@ public class Ball {
     }
 
     public void draw(Canvas canvas){
-        update(canvas.getWidth(), canvas.getHeight());
+        update(canvas.getWidth());
 
         ballRect.set(x, y, x + diameter, y + diameter);
         canvas.rotate(rotate, ballRect.centerX(), ballRect.centerY());
@@ -132,11 +132,8 @@ public class Ball {
         }
     }
 
-    public void fling(int direction, float v, boolean invert) {
+    public void fling(int direction, boolean invert) {
         if(!goingUp){
-//            if(listener != null){
-//                listener.playSound(Game.SOUND_HIT);
-//            }
             if(invert){
                 switch (direction){
                     case Game.MOVE_LEFT:

@@ -8,9 +8,11 @@ import com.worldclass.views.MyView;
  * Created by erz on 3/20/14.
  */
 public class LoopThread extends Thread {
-    static final long FPS = 60;
+    private static final long FPS = 50;
+    private static long ticksPS = 1000 / FPS;
     private boolean running = false;
     private MyView myView;
+    private Canvas c = null;
 
     public LoopThread(MyView myView){
         this.myView = myView;
@@ -26,11 +28,9 @@ public class LoopThread extends Thread {
 
     @Override
     public void run() {
-        long ticksPS = 1000 / FPS;
         long startTime;
         long sleepTime;
         while (running) {
-            Canvas c = null;
             startTime = System.currentTimeMillis();
             try {
                 c = myView.getHolder().lockCanvas();

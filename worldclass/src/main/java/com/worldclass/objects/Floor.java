@@ -16,7 +16,7 @@ public class Floor {
 
     private int topSpeed;
 
-    public Floor(int height, int width, float textSize, int topSpeed){
+    public Floor(float textSize, int topSpeed){
         y = 0;
         this.spacing = textSize;
         this.topSpeed = topSpeed;

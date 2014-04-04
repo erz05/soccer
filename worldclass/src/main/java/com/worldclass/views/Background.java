@@ -81,7 +81,7 @@ public class Background extends MyView {
     public void createObjects() {
         int radius = getHeight()/30;
         int topSpeed = getHeight()/80;
-        floor = new Floor(getHeight(), getWidth(), radius, topSpeed);
+        floor = new Floor(radius, topSpeed);
     }
 
     private void update(int width, int height){
