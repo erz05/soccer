@@ -12,11 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.worldclass.R;
-import com.worldclass.listeners.BackgroundListener;
 import com.worldclass.listeners.GameListener;
 import com.worldclass.listeners.MenuListener;
 import com.worldclass.utils.MusicPlayer;
-import com.worldclass.views.Background;
 import com.worldclass.views.Game;
 import com.worldclass.views.Menu;
 
@@ -28,9 +26,8 @@ import com.worldclass.views.Menu;
 5. show touches maybe
  */
 
-public class MainActivity extends Activity implements MenuListener, GameListener, BackgroundListener {
+public class MainActivity extends Activity implements MenuListener, GameListener {
     private Game game;
-    private Background background;
     private Menu menu;
     private boolean paused;
     private final String PREFS = "preferencesFile";
@@ -50,12 +47,8 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
         menu = new Menu(this);
         menu.setListener(this);
-        background = new Background(this);
-        background.setBackgroundListener(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         menu.setLayoutParams(params);
-        gameFrame.addView(background);
-        background.start();
         gameFrame.addView(menu);
 
         Button quit = (Button) findViewById(R.id.quitButton);
@@ -65,7 +58,6 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         quit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //onGameQuit();
                 onGameMenu();
             }
         });
@@ -78,7 +70,6 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //onGameQuit();
                 onGameMenu();
             }
         });
@@ -117,12 +108,11 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         }else {
             if(game != null){
                 game.pause();
-                background.gamePaused();
                 paused = true;
                 LinearLayout pauseLayout = (LinearLayout) findViewById(R.id.pauseMenu);
                 pauseLayout.setVisibility(View.VISIBLE);
                 TextView scoreView = (TextView) findViewById(R.id.score);
-                scoreView.setText("Score: " + background.getScore());
+                scoreView.setText("Score: " + game.getScore());
             }
         }
     }
@@ -132,7 +122,6 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         super.onDestroy();
         game = null;
         menu = null;
-        background = null;
     }
 
     @Override
@@ -156,10 +145,6 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             gameFrame.removeView(menu);
             gameFrame.addView(game);
             game.start();
-        }
-        if(background != null){
-            background.reset();
-            background.gameResume();
         }
     }
 
@@ -192,28 +177,12 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             gameFrame.addView(game);
             game.start();
         }
-        if(background != null){
-            background.reset();
-            background.gameResume();
-        }
-    }
-
-    @Override
-    public void onGameOver(){
-        int score = 0;
-        if(background != null){
-            score = background.getScore();
-        }
-        onGameOver(score);
     }
 
     @Override
     public void onGameOver(final int score) {
         playSound(MusicPlayer.SOUND_HIT);
         isGameOver = true;
-        if(background != null){
-            background.reset();
-        }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -246,9 +215,6 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     public void onGameResume() {
         if(game != null){
             game.resume();
-            if(background != null){
-                background.gameResume();
-            }
             paused = false;
             LinearLayout pauseLayout = (LinearLayout) findViewById(R.id.pauseMenu);
             LinearLayout endLayout = (LinearLayout) findViewById(R.id.endMenu);
@@ -267,13 +233,6 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             gameFrame.removeView(game);
             gameFrame.addView(menu);
         }
-    }
-
-    @Override
-    public boolean isMoving() {
-        if(background != null)
-            return background.startMoving;
-        return false;
     }
 
     @Override
