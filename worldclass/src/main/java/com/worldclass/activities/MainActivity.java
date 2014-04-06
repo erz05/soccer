@@ -33,7 +33,10 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     private final String PREFS = "preferencesFile";
     private MusicPlayer musicPlayer;
     private boolean playSounds;
-
+    private LinearLayout pauseMenu;
+    private static final int MENU_PAUSE = 0;
+    private static final int MENU_END = 1;
+    private static final int MENU_CLOSE = 2;
     private boolean isGameOver = false;
 
     @Override
@@ -51,10 +54,9 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         menu.setLayoutParams(params);
         gameFrame.addView(menu);
 
+        pauseMenu = (LinearLayout) findViewById(R.id.pauseMenu);
         Button quit = (Button) findViewById(R.id.quitButton);
         Button resume = (Button) findViewById(R.id.resumeButton);
-        Button end = (Button) findViewById(R.id.endButton);
-        Button restart = (Button) findViewById(R.id.restartButton);
         quit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,19 +66,10 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         resume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onGameResume();
-            }
-        });
-        end.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onGameMenu();
-            }
-        });
-        restart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                restartGame();
+                if(isGameOver)
+                    restartGame();
+                else
+                    onGameResume();
             }
         });
 
@@ -109,10 +102,7 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             if(game != null){
                 game.pause();
                 paused = true;
-                LinearLayout pauseLayout = (LinearLayout) findViewById(R.id.pauseMenu);
-                pauseLayout.setVisibility(View.VISIBLE);
-                TextView scoreView = (TextView) findViewById(R.id.score);
-                scoreView.setText("Score: " + game.getScore());
+                menuShower(MENU_PAUSE, game.getScore(), 0);
             }
         }
     }
@@ -122,6 +112,35 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         super.onDestroy();
         game = null;
         menu = null;
+    }
+
+    public void menuShower(int i, int score, int highScore){
+        if(pauseMenu != null){
+            TextView title = (TextView) findViewById(R.id.title);
+            TextView scoreView = (TextView) findViewById(R.id.score);
+            TextView highView = (TextView) findViewById(R.id.highScore);
+            Button resume = (Button) findViewById(R.id.resumeButton);
+            switch (i){
+                case MENU_PAUSE:
+                    pauseMenu.setVisibility(View.VISIBLE);
+                    scoreView.setText("Score: " + game.getScore());
+                    break;
+                case MENU_END:
+                    pauseMenu.setVisibility(View.VISIBLE);
+                    title.setText("Game Over");
+                    scoreView.setText("Score: "+score);
+                    highView.setText("Highscore: "+highScore);
+                    highView.setVisibility(View.VISIBLE);
+                    resume.setText("Restart");
+                    break;
+                case MENU_CLOSE:
+                    pauseMenu.setVisibility(View.GONE);
+                    title.setText("Game Paused");
+                    highView.setVisibility(View.GONE);
+                    resume.setText("Resume");
+                    break;
+            }
+        }
     }
 
     @Override
@@ -161,8 +180,7 @@ public class MainActivity extends Activity implements MenuListener, GameListener
 
     public void restartGame() {
         isGameOver = false;
-        LinearLayout endMenu = (LinearLayout) findViewById(R.id.endMenu);
-        endMenu.setVisibility(View.GONE);
+        menuShower(MENU_CLOSE,0,0);
         FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
         if(game != null){
             gameFrame.removeView(game);
@@ -188,19 +206,10 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             public void run() {
                 if(!paused){
                     paused = true;
-                    LinearLayout endMenu = (LinearLayout) findViewById(R.id.endMenu);
-                    TextView scoreView = (TextView) findViewById(R.id.endScore);
-                    TextView highView = (TextView) findViewById(R.id.highScore);
-
-                    scoreView.setText("Score: "+score);
-
-                    if(endMenu.getVisibility() == View.GONE)
-                        endMenu.setVisibility(View.VISIBLE);
 
                     SharedPreferences settings = getSharedPreferences(PREFS,0);
                     int highScore = settings.getInt("highScore", 0);
-
-                    highView.setText("Highscore: "+highScore);
+                    menuShower(MENU_END, score, highScore);
 
                     if(score > highScore){
                         SharedPreferences.Editor editor = settings.edit();
@@ -216,19 +225,13 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         if(game != null){
             game.resume();
             paused = false;
-            LinearLayout pauseLayout = (LinearLayout) findViewById(R.id.pauseMenu);
-            LinearLayout endLayout = (LinearLayout) findViewById(R.id.endMenu);
-            pauseLayout.setVisibility(View.GONE);
-            endLayout.setVisibility(View.GONE);
+            menuShower(MENU_CLOSE,0,0);
         }
     }
 
     public void onGameMenu() {
         if(menu != null){
-            LinearLayout pauseLayout = (LinearLayout) findViewById(R.id.pauseMenu);
-            LinearLayout endLayout = (LinearLayout) findViewById(R.id.endMenu);
-            pauseLayout.setVisibility(View.GONE);
-            endLayout.setVisibility(View.GONE);
+            menuShower(MENU_CLOSE,0,0);
             FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
             gameFrame.removeView(game);
             gameFrame.addView(menu);
