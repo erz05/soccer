@@ -10,19 +10,20 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import com.worldclass.R;
+import com.worldclass.listeners.BallPosListener;
 import com.worldclass.listeners.GameListener;
 import com.worldclass.listeners.SoundListener;
 import com.worldclass.objects.Ball;
-import com.worldclass.objects.ConeList;
+import com.worldclass.objects.ConeNetList;
 import com.worldclass.objects.Floor;
 
 /**
  * Created by erz on 2/19/14.
  */
-public class Game extends MyView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, SoundListener {
+public class Game extends MyView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, SoundListener, BallPosListener {
 
     private Ball ball;
-    private ConeList coneList;
+    private ConeNetList coneNetList;
     private GestureDetector detector;
     private GameListener gameListener;
     private Floor floor;
@@ -89,13 +90,13 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
                 }
             }
 
-            if(coneList != null)
-                coneList.draw(canvas, startMoving);
+            if(coneNetList != null)
+                coneNetList.draw(canvas, startMoving);
             if(ball != null)
                 ball.draw(canvas);
 
-            if(coneList != null && ball != null && ball.getUpScale() == 1){
-                if(coneList.checkCollision(ball.getBounds())){
+            if(coneNetList != null && ball != null && ball.getUpScale() == 1){
+                if(coneNetList.checkCollision(ball.getBounds())){
                     if(gameListener != null){
                         gameListener.onGameOver(floor.getYards());
                     }
@@ -120,7 +121,9 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
         ball = new Ball(newX,getHeight()-(radius*4),radius,true,ballBitmap,jumpHeight, speedX);
         ball.setListener(this);
         Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cone);
-        coneList = new ConeList(getWidth(), getHeight(), coneSize, coneBitmap, topSpeed);
+        Bitmap netBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.net);
+        coneNetList = new ConeNetList(getWidth(), getHeight(), coneSize, coneBitmap, topSpeed, netBitmap);
+        coneNetList.setListener(this);
         floor = new Floor(radius, topSpeed);
     }
 
@@ -233,5 +236,12 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
     @Override
     public void playSound(int sound) {
         gameListener.playSound(sound);
+    }
+
+    @Override
+    public int getBallX() {
+        if(ball != null)
+            return ball.x;
+        return -1;
     }
 }

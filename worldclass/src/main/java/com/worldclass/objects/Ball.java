@@ -4,9 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
+import android.graphics.Rect;
 
-import com.worldclass.activities.MainActivity;
 import com.worldclass.listeners.SoundListener;
 import com.worldclass.utils.MusicPlayer;
 import com.worldclass.views.Game;
@@ -16,15 +15,14 @@ import com.worldclass.views.Game;
  */
 public class Ball {
 
-    public float x;
-    public float y;
+    public int x, y;
     public int radius;
     public int diameter;
     public boolean alive;
     private float veloX = 0;
     private float speedx;
     private Bitmap ballBitmap;
-    private RectF ballRect;
+    private Rect ballRect;
     private int rotate = 0;
     private int jumpHeight;
     private int rotateDirection = 0;
@@ -35,7 +33,7 @@ public class Ball {
     private SoundListener listener;
     private Paint paint;
 
-    public Ball(float x, float y, int radius, boolean alive, Bitmap ballBitmap, int jumpHeight, float speedx){
+    public Ball(int x, int y, int radius, boolean alive, Bitmap ballBitmap, int jumpHeight, float speedx){
         this.x = x;
         this.y = y;
         this.radius = radius;
@@ -45,7 +43,7 @@ public class Ball {
         this.jumpHeight = jumpHeight;
         this.speedx = speedx;
 
-        ballRect = new RectF();
+        ballRect = new Rect();
 
         paint = new Paint();
         paint.setAntiAlias(true);
@@ -112,7 +110,7 @@ public class Ball {
         canvas.drawBitmap(ballBitmap, null, ballRect, null);
     }
 
-    public RectF getBounds(){
+    public Rect getBounds(){
         return ballRect;
     }
 
