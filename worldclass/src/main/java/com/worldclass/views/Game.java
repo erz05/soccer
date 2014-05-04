@@ -109,7 +109,7 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
     @Override
     public void createObjects() {
         int radius = getHeight()/30;
-        int coneSize = getHeight()/20;
+        int coneSize = getHeight()/10;
         int jumpHeight = getHeight()/44;
         int topSpeed = getHeight()/80;
 
@@ -120,9 +120,8 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
         Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.soccer_ball);
         ball = new Ball(newX,getHeight()-(radius*4),radius,true,ballBitmap,jumpHeight, speedX);
         ball.setListener(this);
-        Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cone);
-        Bitmap netBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.net);
-        coneNetList = new ConeNetList(getWidth(), getHeight(), coneSize, coneBitmap, topSpeed, netBitmap);
+        Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.p4);
+        coneNetList = new ConeNetList(getWidth(), getHeight(), coneSize, coneBitmap, topSpeed);
         coneNetList.setListener(this);
         floor = new Floor(radius, topSpeed);
     }

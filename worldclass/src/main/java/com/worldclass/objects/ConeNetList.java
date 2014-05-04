@@ -18,25 +18,25 @@ public class ConeNetList {
     private int topSpeed, currentX, currentY, size, posX, posY;
     private Rect currentRect;
     private Bitmap coneBitmap;
-    private Bitmap netBitmap;
-    private Net net;
     private Random random;
     private int spawnY = 0;
     private BallPosListener listener;
+    private int magicY;
 
     private final static int SINGLE = 0;
     private final static int DOUBLE = 1;
     private final static int TRIPPLE = 2;
     private final static int NET = 3;
 
-    public ConeNetList(int w, int h, int size, Bitmap coneBitmap, int topSpeed, Bitmap netBitmap){
-        this.topSpeed = topSpeed;
+    public ConeNetList(int w, int h, int size, Bitmap coneBitmap, int topSpeed){
+        this.topSpeed = topSpeed/2;
         this.size = size;
         this.coneBitmap = coneBitmap;
-        this.netBitmap = netBitmap;
         spawnY = -size;
 
         random = new Random();
+
+        magicY = coneBitmap.getHeight()+(Math.abs(size-coneBitmap.getWidth()));
 
         coneList = new LinkedList<Cone>();
         Cone cone;
@@ -52,7 +52,6 @@ public class ConeNetList {
             }
             coneList.add(cone);
         }
-        net = new Net(posX, -size, size*3, size);
     }
 
     public void update(int w, int h){
@@ -61,17 +60,11 @@ public class ConeNetList {
                 cone.update(topSpeed, h);
             }
         }
-        if(net.visible) {
-            net.update(topSpeed, h);
-        }
 
         spawnY += topSpeed;
         if(spawnY > size * 8){
             spawnY = -size;
-            if(net.visible)
-                coneManger(random.nextInt(3),w);
-            else
-                coneManger(random.nextInt(4), w);
+            coneManger(random.nextInt(3), w);
         }
     }
 
@@ -82,13 +75,10 @@ public class ConeNetList {
             if(cone.visible) {
                 currentX = cone.x;
                 currentY = cone.y;
-                currentRect.set(currentX, currentY, currentX + size, currentY + size);
+                currentRect.set(currentX, currentY, currentX + size, currentY + magicY);
                 canvas.drawBitmap(coneBitmap, null, currentRect, null);
+                //canvas.drawBitmap(coneBitmap,cone.x,cone.y,null);
             }
-        }
-        if(net.visible){
-            currentRect.set(net.x, net.y, net.x+(size*3), net.y+size);
-            canvas.drawBitmap(netBitmap, null, currentRect, null);
         }
     }
 
@@ -158,11 +148,6 @@ public class ConeNetList {
                     }
                     if(count == 3) break;
                 }
-                break;
-            case NET:
-                net.visible = true;
-                net.y = -size;
-                net.x = random.nextInt(w-size*3);
                 break;
         }
     }
