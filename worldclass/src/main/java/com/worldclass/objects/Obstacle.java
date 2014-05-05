@@ -3,11 +3,11 @@ package com.worldclass.objects;
 /**
  * Created by erz on 2/25/14.
  */
-public class Cone {
+public class Obstacle {
     public int x,y,size;
     public boolean visible = false;
 
-    public Cone(int x, int y, int size){
+    public Obstacle(int x, int y, int size){
         this.x = x;
         this.y = y;
         this.size = size;

@@ -13,9 +13,9 @@ import java.util.Random;
 /**
  * Created by erz on 2/25/14.
  */
-public class ConeNetList {
+public class ObstaclePool {
 
-    private LinkedList<Cone> coneList;
+    private LinkedList<Obstacle> obstacleList;
     private int topSpeed, currentX, currentY, size, posX, posY;
     private Rect currentRect;
     private Bitmap coneBitmap;
@@ -30,7 +30,7 @@ public class ConeNetList {
 //    private final static int TRIPPLE = 2;
 //    private final static int NET = 3;
 
-    public ConeNetList(int w, int h, int size, Bitmap coneBitmap, int topSpeed){
+    public ObstaclePool(int w, int h, int size, Bitmap coneBitmap, int topSpeed){
         this.topSpeed = topSpeed/2;
         this.size = size*2;
         this.coneBitmap = coneBitmap;
@@ -40,19 +40,19 @@ public class ConeNetList {
 
         magicY = coneBitmap.getHeight()+(Math.abs(size-coneBitmap.getWidth()));
 
-        coneList = new LinkedList<Cone>();
-        Cone cone;
+        obstacleList = new LinkedList<Obstacle>();
+        Obstacle obstacle;
         posX = random.nextInt(w - size);
         posY = 0;
         currentRect = new Rect();
         for(int i=0; i<6; i++){
-            cone = new Cone(0, 0, size);
+            obstacle = new Obstacle(0, 0, size);
             if(i == 0){
-                cone.x = posX;
-                cone.y = posY-size*2;
-                cone.visible = true;
+                obstacle.x = posX;
+                obstacle.y = posY-size*2;
+                obstacle.visible = true;
             }
-            coneList.add(cone);
+            obstacleList.add(obstacle);
         }
 
         paint = new Paint();
@@ -60,9 +60,9 @@ public class ConeNetList {
     }
 
     public void update(int w, int h){
-        for (Cone cone: coneList){
-            if(cone.visible) {
-                cone.update(topSpeed, h);
+        for (Obstacle obstacle : obstacleList){
+            if(obstacle.visible) {
+                obstacle.update(topSpeed, h);
             }
         }
 
@@ -76,10 +76,10 @@ public class ConeNetList {
     public void draw(Canvas canvas, boolean startMoving){
         if(startMoving)
             update(canvas.getWidth(), canvas.getHeight());
-        for(Cone cone: coneList){
-            if(cone.visible) {
-                currentX = cone.x;
-                currentY = cone.y;
+        for(Obstacle obstacle : obstacleList){
+            if(obstacle.visible) {
+                currentX = obstacle.x;
+                currentY = obstacle.y;
                 currentRect.set(currentX, currentY, currentX + size, currentY + size);
                 canvas.drawBitmap(coneBitmap, null, currentRect, paint);
                 //canvas.drawBitmap(coneBitmap,cone.x,cone.y,null);
@@ -88,10 +88,10 @@ public class ConeNetList {
     }
 
     public boolean checkCollision(Rect ballRect){
-        for(Cone cone: coneList){
-            if(cone.visible) {
-                currentX = cone.x;
-                currentY = cone.y;
+        for(Obstacle obstacle : obstacleList){
+            if(obstacle.visible) {
+                currentX = obstacle.x;
+                currentY = obstacle.y;
                 currentRect.set(currentX, currentY, currentX + size, currentY + size);
                 if (currentRect.intersect(ballRect)) {
                     return true;
@@ -106,32 +106,32 @@ public class ConeNetList {
         posX = 0;
         switch (i){
             case SINGLE:
-                for(Cone cone: coneList){
-                    if(!cone.visible){
-                        cone.visible = true;
-                        cone.y = -size;
+                for(Obstacle obstacle : obstacleList){
+                    if(!obstacle.visible){
+                        obstacle.visible = true;
+                        obstacle.y = -size;
                         if(listener != null)
                             posX = listener.getBallX();
                         if(posX > 0)
-                            cone.x = posX;
+                            obstacle.x = posX;
                         else
-                            cone.x = random.nextInt(w - size);
+                            obstacle.x = random.nextInt(w - size);
                         break;
                     }
                 }
                 break;
             case DOUBLE:
-                for(Cone cone: coneList){
-                    if(!cone.visible){
-                        cone.visible = true;
-                        cone.y = -size;
+                for(Obstacle obstacle : obstacleList){
+                    if(!obstacle.visible){
+                        obstacle.visible = true;
+                        obstacle.y = -size;
                         if(count == 0)
                             posX = random.nextInt(w-size);
                         else
                             posX += size *3;
                         if(posX+size>w)
                             posX = 0;
-                        cone.x = posX;
+                        obstacle.x = posX;
                         count += 1;
                     }
                     if(count == 2) break;

@@ -14,7 +14,7 @@ import com.worldclass.listeners.BallPosListener;
 import com.worldclass.listeners.GameListener;
 import com.worldclass.listeners.SoundListener;
 import com.worldclass.objects.Ball;
-import com.worldclass.objects.ConeNetList;
+import com.worldclass.objects.ObstaclePool;
 
 /**
  * Created by erz on 2/19/14.
@@ -22,7 +22,7 @@ import com.worldclass.objects.ConeNetList;
 public class Game extends MyView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, SoundListener, BallPosListener {
 
     private Ball ball;
-    private ConeNetList coneNetList;
+    private ObstaclePool obstaclePool;
     private GestureDetector detector;
     private GameListener gameListener;
     public boolean startMoving = false;
@@ -83,9 +83,11 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
             if(gameStarted){
                 if(countdown > -1){
                     if(countdown > 0){
-                        canvas.drawText(""+countdown, canvas.getWidth()/2 - ((paint.measureText(""+countdown))/2), canvas.getHeight()/2, paint);
+                        if(paint != null)
+                            canvas.drawText(""+countdown, canvas.getWidth()/2 - ((paint.measureText(""+countdown))/2), canvas.getHeight()/2, paint);
                     }else {
-                        canvas.drawText("GO!", canvas.getWidth()/2 - ((paint.measureText("GO!"))/2), canvas.getHeight()/2, paint);
+                        if(paint != null)
+                            canvas.drawText("GO!", canvas.getWidth()/2 - ((paint.measureText("GO!"))/2), canvas.getHeight()/2, paint);
                     }
                 }else {
                     startMoving = true;
@@ -94,13 +96,13 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
 
             canvas.drawText("Score: "+yards,spacing,spacing*2,paint);
 
-            if(coneNetList != null)
-                coneNetList.draw(canvas, startMoving);
+            if(obstaclePool != null)
+                obstaclePool.draw(canvas, startMoving);
             if(ball != null)
                 ball.draw(canvas);
 
-            if(coneNetList != null && ball != null && ball.getUpScale() == 1){
-                if(coneNetList.checkCollision(ball.getBounds())){
+            if(obstaclePool != null && ball != null && ball.getUpScale() == 1){
+                if(obstaclePool.checkCollision(ball.getBounds())){
                     if(gameListener != null){
                         gameListener.onGameOver(yards);
                     }
@@ -124,9 +126,9 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
         Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
         ball = new Ball(newX,getHeight()-(radius*4),radius,true,ballBitmap,jumpHeight, speedX);
         ball.setListener(this);
-        Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.p4);
-        coneNetList = new ConeNetList(getWidth(), getHeight(), radius, coneBitmap, topSpeed);
-        coneNetList.setListener(this);
+        Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.jersey);
+        obstaclePool = new ObstaclePool(getWidth(), getHeight(), radius, coneBitmap, topSpeed);
+        obstaclePool.setListener(this);
 
         spacing = radius;
         yards = 0;
