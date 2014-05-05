@@ -15,7 +15,6 @@ import com.worldclass.listeners.GameListener;
 import com.worldclass.listeners.SoundListener;
 import com.worldclass.objects.Ball;
 import com.worldclass.objects.ConeNetList;
-import com.worldclass.objects.Floor;
 
 /**
  * Created by erz on 2/19/14.
@@ -26,12 +25,15 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
     private ConeNetList coneNetList;
     private GestureDetector detector;
     private GameListener gameListener;
-    private Floor floor;
     public boolean startMoving = false;
-    private Paint messagePaint;
     private int countdown = 3;
     private int time = 0;
-    private boolean gameStarted = false;
+    public boolean gameStarted = false;
+    private Paint paint;
+    private float y, spacing;
+    private int yards;
+
+    private int topSpeed;
 
     private float initY;
 
@@ -43,11 +45,6 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
     public Game(Context context) {
         super(context);
         detector = new GestureDetector(context, this);
-        messagePaint = new Paint();
-        messagePaint.setColor(Color.WHITE);
-        messagePaint.setStrokeWidth(2);
-        messagePaint.setTextSize(100);
-        messagePaint.setStyle(Paint.Style.STROKE);
     }
 
     @Override
@@ -55,7 +52,7 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    private void update(){
+    private void update(int h){
         if(gameStarted){
             if(countdown > -1){
                 if(time > 30){
@@ -65,30 +62,37 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
                     time += 1;
                 }
             }
+
+            if(startMoving){
+                y += topSpeed;
+
+                if(y > h){
+                    y = 0;
+                    yards += 1;
+                }
+            }
         }
     }
 
     @Override
     public void onDraw(Canvas canvas){
         if(canvas != null){
-            update();
-            canvas.drawColor(Color.parseColor("#009966"));
+            update(canvas.getHeight());
+            canvas.drawColor(Color.parseColor("#187E37"));
 
             if(gameStarted){
-                if(floor != null){
-                    floor.draw(canvas, startMoving);
-                }
-
                 if(countdown > -1){
                     if(countdown > 0){
-                        canvas.drawText(""+countdown, canvas.getWidth()/2 - ((messagePaint.measureText(""+countdown))/2), canvas.getHeight()/2, messagePaint);
+                        canvas.drawText(""+countdown, canvas.getWidth()/2 - ((paint.measureText(""+countdown))/2), canvas.getHeight()/2, paint);
                     }else {
-                        canvas.drawText("GO!", canvas.getWidth()/2 - ((messagePaint.measureText("GO!"))/2), canvas.getHeight()/2, messagePaint);
+                        canvas.drawText("GO!", canvas.getWidth()/2 - ((paint.measureText("GO!"))/2), canvas.getHeight()/2, paint);
                     }
                 }else {
                     startMoving = true;
                 }
             }
+
+            canvas.drawText("Score: "+yards,spacing,spacing*2,paint);
 
             if(coneNetList != null)
                 coneNetList.draw(canvas, startMoving);
@@ -98,7 +102,7 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
             if(coneNetList != null && ball != null && ball.getUpScale() == 1){
                 if(coneNetList.checkCollision(ball.getBounds())){
                     if(gameListener != null){
-                        gameListener.onGameOver(floor.getYards());
+                        gameListener.onGameOver(yards);
                     }
                     ball.changeColor(Color.RED);
                 }
@@ -111,19 +115,28 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
         int radius = getHeight()/30;
         int coneSize = getHeight()/10;
         int jumpHeight = getHeight()/44;
-        int topSpeed = getHeight()/80;
+        topSpeed = getHeight()/80;
 
         float speedX = getWidth()/185;
 
         int newX = getWidth()/2 - radius;
 
-        Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.soccer_ball);
+        Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
         ball = new Ball(newX,getHeight()-(radius*4),radius,true,ballBitmap,jumpHeight, speedX);
         ball.setListener(this);
         Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.p4);
-        coneNetList = new ConeNetList(getWidth(), getHeight(), coneSize, coneBitmap, topSpeed);
+        coneNetList = new ConeNetList(getWidth(), getHeight(), radius, coneBitmap, topSpeed);
         coneNetList.setListener(this);
-        floor = new Floor(radius, topSpeed);
+
+        spacing = radius;
+        yards = 0;
+        y = 0;
+        paint = new Paint();
+        paint.setStrokeWidth(getWidth()/200);
+        paint.setAntiAlias(true);
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setTextSize(getHeight()/25);
     }
 
     public void setGameListener(GameListener gameListener){
@@ -205,14 +218,12 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
         countdown = 3;
         time = 0;
         gameStarted = true;
-        if(floor != null)
-        floor.reset();
+        y = 0;
+        yards = 0;
     }
 
     public int getScore(){
-        if(floor != null)
-            return floor.getYards();
-        return 0;
+        return yards;
     }
 
     @Override

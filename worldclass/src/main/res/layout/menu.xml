@@ -1,46 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@drawable/wcwelcome">
 
-    <LinearLayout android:orientation="vertical"
+    <RelativeLayout android:orientation="vertical"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent">
 
-        <ImageView android:layout_width="match_parent"
-                   android:layout_height="0dp"
-                   android:layout_weight="1"
-                   android:layout_gravity="center"/>
+
 
         <ImageView android:id="@+id/logo"
-                   android:layout_width="match_parent"
-                   android:layout_height="0dp"
-                   android:layout_weight="1"
-                   android:layout_gravity="center"
-                   android:src="@drawable/menu"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_centerHorizontal="true"
+                   android:src="@drawable/wclogo"
                    android:padding="50dp"/>
 
-        <LinearLayout android:orientation="vertical"
-                      android:layout_width="match_parent"
-                      android:layout_height="0dp"
-                      android:layout_weight="1">
+        <ImageView android:id="@+id/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/wcplay"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/logo"
+            android:padding="50dp"/>
 
-            <ImageView android:id="@+id/play"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:src="@drawable/playbutton"
-                       android:layout_gravity="center"
-                       android:layout_margin="10dp"/>
+        <ImageView android:id="@+id/options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/settings"
+            android:layout_alignParentBottom="true"
+            android:padding="20dp"/>
 
-            <ImageView android:id="@+id/options"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:src="@drawable/options"
-                       android:layout_gravity="center"
-                       android:layout_margin="10dp"/>
-
-        </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout android:id="@+id/optionsMenu"
         android:orientation="vertical"

@@ -2,6 +2,7 @@ package com.worldclass.objects;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.worldclass.listeners.BallPosListener;
@@ -22,15 +23,16 @@ public class ConeNetList {
     private int spawnY = 0;
     private BallPosListener listener;
     private int magicY;
+    private Paint paint;
 
     private final static int SINGLE = 0;
     private final static int DOUBLE = 1;
-    private final static int TRIPPLE = 2;
-    private final static int NET = 3;
+//    private final static int TRIPPLE = 2;
+//    private final static int NET = 3;
 
     public ConeNetList(int w, int h, int size, Bitmap coneBitmap, int topSpeed){
         this.topSpeed = topSpeed/2;
-        this.size = size;
+        this.size = size*2;
         this.coneBitmap = coneBitmap;
         spawnY = -size;
 
@@ -43,15 +45,18 @@ public class ConeNetList {
         posX = random.nextInt(w - size);
         posY = 0;
         currentRect = new Rect();
-        for(int i=0; i<12; i++){
+        for(int i=0; i<6; i++){
             cone = new Cone(0, 0, size);
             if(i == 0){
                 cone.x = posX;
-                cone.y = posY-size;
+                cone.y = posY-size*2;
                 cone.visible = true;
             }
             coneList.add(cone);
         }
+
+        paint = new Paint();
+        paint.setAntiAlias(true);
     }
 
     public void update(int w, int h){
@@ -64,7 +69,7 @@ public class ConeNetList {
         spawnY += topSpeed;
         if(spawnY > size * 8){
             spawnY = -size;
-            coneManger(random.nextInt(3), w);
+            coneManger(random.nextInt(2), w);
         }
     }
 
@@ -75,8 +80,8 @@ public class ConeNetList {
             if(cone.visible) {
                 currentX = cone.x;
                 currentY = cone.y;
-                currentRect.set(currentX, currentY, currentX + size, currentY + magicY);
-                canvas.drawBitmap(coneBitmap, null, currentRect, null);
+                currentRect.set(currentX, currentY, currentX + size, currentY + size);
+                canvas.drawBitmap(coneBitmap, null, currentRect, paint);
                 //canvas.drawBitmap(coneBitmap,cone.x,cone.y,null);
             }
         }
@@ -132,23 +137,23 @@ public class ConeNetList {
                     if(count == 2) break;
                 }
                 break;
-            case TRIPPLE:
-                for(Cone cone: coneList){
-                    if(!cone.visible){
-                        cone.visible = true;
-                        cone.y = -size;
-                        if(count == 0)
-                            posX = random.nextInt(w-size);
-                        else
-                            posX += size *3;
-                        if(posX+size>w)
-                            posX = 0;
-                        cone.x = posX;
-                        count += 1;
-                    }
-                    if(count == 3) break;
-                }
-                break;
+//            case TRIPPLE:
+//                for(Cone cone: coneList){
+//                    if(!cone.visible){
+//                        cone.visible = true;
+//                        cone.y = -size;
+//                        if(count == 0)
+//                            posX = random.nextInt(w-size);
+//                        else
+//                            posX += size *3;
+//                        if(posX+size>w)
+//                            posX = 0;
+//                        cone.x = posX;
+//                        count += 1;
+//                    }
+//                    if(count == 3) break;
+//                }
+//                break;
         }
     }
 
