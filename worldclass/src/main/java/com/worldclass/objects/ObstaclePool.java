@@ -31,7 +31,7 @@ public class ObstaclePool {
 //    private final static int NET = 3;
 
     public ObstaclePool(int w, int h, int size, Bitmap coneBitmap, int topSpeed){
-        this.topSpeed = topSpeed/2;
+        this.topSpeed = topSpeed;
         this.size = size*2;
         this.coneBitmap = coneBitmap;
         spawnY = -size;

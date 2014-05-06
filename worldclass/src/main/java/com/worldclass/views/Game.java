@@ -94,7 +94,8 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
                 }
             }
 
-            canvas.drawText("Score: "+yards,spacing,spacing*2,paint);
+            if(paint != null)
+                canvas.drawText("Score: "+yards,spacing,spacing*2,paint);
 
             if(obstaclePool != null)
                 obstaclePool.draw(canvas, startMoving);
