@@ -5,5 +5,4 @@ package com.worldclass.listeners;
  */
 public interface MenuListener {
     public void onPlay();
-    public void playMusic(boolean on);
 }

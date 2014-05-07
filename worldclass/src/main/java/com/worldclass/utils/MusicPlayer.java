@@ -13,9 +13,6 @@ public class MusicPlayer {
     private MediaPlayer moveSound;
     private MediaPlayer hitSound;
     private MediaPlayer jumpSound;
-    private MediaPlayer begginOneSound;
-    private MediaPlayer begginTwoSound;
-    private MediaPlayer erzSound;
     public final static int SOUND_MOVE = 101;
     public final static int SOUND_HIT = 102;
     public final static int SOUND_JUMP = 103;
@@ -24,10 +21,6 @@ public class MusicPlayer {
         moveSound = MediaPlayer.create(context, R.raw.swosh);
         hitSound = MediaPlayer.create(context, R.raw.hit);
         jumpSound = MediaPlayer.create(context, R.raw.jump);
-        //begginOneSound = MediaPlayer.create(this, R.raw.beggining_one);
-        //begginTwoSound = MediaPlayer.create(this, R.raw.beggining_two);
-        erzSound = MediaPlayer.create(context, R.raw.erz);
-        erzSound.setLooping(true);
     }
 
     public void playSound(int sound) {
@@ -44,18 +37,9 @@ public class MusicPlayer {
         }
     }
 
-    public void playMusic() {
-        erzSound.start();
-    }
-
     public void stopALL(){
-        erzSound.stop();
         hitSound.stop();
         moveSound.stop();
         jumpSound.stop();
-    }
-
-    public void pauseMusic(){
-        erzSound.pause();
     }
 }

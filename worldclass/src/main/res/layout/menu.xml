@@ -25,6 +25,14 @@
             android:layout_below="@+id/logo"
             android:padding="50dp"/>
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menuball"
+            android:layout_above="@+id/options"
+            android:layout_centerHorizontal="true"
+            android:padding="50dp"/>
+
         <ImageView android:id="@+id/options"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

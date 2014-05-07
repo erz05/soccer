@@ -79,20 +79,6 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     }
 
     @Override
-    public void onResume(){
-        super.onResume();
-        if(playSounds && musicPlayer != null)
-            musicPlayer.playMusic();
-    }
-
-    @Override
-    public void onPause(){
-        super.onPause();
-        if(musicPlayer != null)
-            musicPlayer.pauseMusic();
-    }
-
-    @Override
     public void onBackPressed(){
         if(paused){
             if(musicPlayer != null)
@@ -164,17 +150,7 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             gameFrame.removeView(menu);
             gameFrame.addView(game);
             game.start();
-        }
-    }
-
-    @Override
-    public void playMusic(boolean on) {
-        if(musicPlayer != null){
-            if(on){
-                musicPlayer.playMusic();
-            }else {
-                musicPlayer.pauseMusic();
-            }
+            menu = null;
         }
     }
 
@@ -233,12 +209,17 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     }
 
     public void onGameMenu() {
-        if(menu != null){
-            menuShower(MENU_CLOSE,0,0);
-            FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
-            gameFrame.removeView(game);
-            gameFrame.addView(menu);
+        if(menu == null) {
+            menu = new Menu(this);
+            menu.setListener(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            menu.setLayoutParams(params);
         }
+        menuShower(MENU_CLOSE,0,0);
+        FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
+        gameFrame.removeView(game);
+        gameFrame.addView(menu);
+        game = null;
     }
 
     @Override
