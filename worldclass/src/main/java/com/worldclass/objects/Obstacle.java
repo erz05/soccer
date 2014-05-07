@@ -5,20 +5,11 @@ package com.worldclass.objects;
  */
 public class Obstacle {
     public int x,y,size;
-    public boolean visible = false;
     public int row, column;
 
     public Obstacle(int x, int y, int size){
         this.x = x;
         this.y = y;
         this.size = size;
-    }
-
-    public void update(float topspeed, int h) {
-        y += topspeed;
-
-        if (y > h + size) {
-            visible = false;
-        }
     }
 }

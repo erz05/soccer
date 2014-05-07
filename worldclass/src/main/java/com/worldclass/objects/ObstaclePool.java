@@ -15,7 +15,7 @@ import java.util.Random;
  */
 public class ObstaclePool {
 
-    private LinkedList<Obstacle> obstacleList;
+    private LinkedList<Obstacle> sleeping, awake, deleteList;
     private int topSpeed, currentX, currentY, size, posX, posY;
     private Rect currentRect;
     private Rect bitmapRect;
@@ -24,9 +24,9 @@ public class ObstaclePool {
     private int spawnY = 0;
     private BallPosListener listener;
     private int magicY;
-    private Paint paint;
     private int columns = 5;
     private int spriteSize;
+    private Obstacle temp;
 
     private final static int SINGLE = 0;
     private final static int DOUBLE = 1;
@@ -44,7 +44,10 @@ public class ObstaclePool {
 
         magicY = coneBitmap.getHeight()+(Math.abs(size-coneBitmap.getWidth()));
 
-        obstacleList = new LinkedList<Obstacle>();
+        sleeping = new LinkedList<Obstacle>();
+        awake = new LinkedList<Obstacle>();
+        deleteList = new LinkedList<Obstacle>();
+
         Obstacle obstacle;
         posX = random.nextInt(w - size);
         posY = 0;
@@ -55,7 +58,6 @@ public class ObstaclePool {
             if(i == 0){
                 obstacle.x = posX;
                 obstacle.y = posY-size*2;
-                obstacle.visible = true;
             }
             obstacle.column = countColumn;
             obstacle.row= countRow;
@@ -64,19 +66,22 @@ public class ObstaclePool {
                 countRow += 1;
                 countColumn = 0;
             }
-            obstacleList.add(obstacle);
+            sleeping.add(obstacle);
         }
-
-        paint = new Paint();
-        paint.setAntiAlias(true);
     }
 
     public void update(int w, int h){
-        for (Obstacle obstacle : obstacleList){
-            if(obstacle.visible) {
-                obstacle.update(topSpeed, h);
+        for (Obstacle obstacle : awake){
+            obstacle.y += topSpeed;
+
+            if (obstacle.y > h + size) {
+                deleteList.add(obstacle);
             }
         }
+
+        sleeping.addAll(deleteList);
+        awake.removeAll(deleteList);
+        deleteList.clear();
 
         spawnY += topSpeed;
         if(spawnY > size * 8){
@@ -88,30 +93,30 @@ public class ObstaclePool {
     public void draw(Canvas canvas, boolean startMoving){
         if(startMoving)
             update(canvas.getWidth(), canvas.getHeight());
-        for(Obstacle obstacle : obstacleList){
-            if(obstacle.visible) {
-                currentX = obstacle.x;
-                currentY = obstacle.y;
-                currentRect.set(currentX, currentY, currentX + size, currentY + size);
-                setBitmapRect(obstacle.row, obstacle.column);
-                canvas.drawBitmap(coneBitmap, bitmapRect, currentRect, paint);
-                //canvas.drawBitmap(coneBitmap,cone.x,cone.y,null);
-            }
+        for(Obstacle obstacle : awake){
+            currentX = obstacle.x;
+            currentY = obstacle.y;
+            currentRect.set(currentX, currentY, currentX + size, currentY + size);
+            setBitmapRect(obstacle.row, obstacle.column);
+            canvas.drawBitmap(coneBitmap, bitmapRect, currentRect, null);
         }
     }
 
     public boolean checkCollision(Rect ballRect){
-        for(Obstacle obstacle : obstacleList){
-            if(obstacle.visible) {
-                currentX = obstacle.x;
-                currentY = obstacle.y;
-                currentRect.set(currentX, currentY, currentX + size, currentY + size);
-                if (currentRect.intersect(ballRect)) {
-                    return true;
-                }
+        boolean hit = false;
+        for(Obstacle obstacle : awake){
+            currentX = obstacle.x;
+            currentY = obstacle.y;
+            currentRect.set(currentX, currentY, currentX + size, currentY + size);
+            if (currentRect.intersect(ballRect)) {
+                deleteList.add(obstacle);
+                hit = true;
             }
         }
-        return false;
+        sleeping.addAll(deleteList);
+        awake.removeAll(deleteList);
+        deleteList.clear();
+        return hit;
     }
 
     public void coneManger(int i, int w){
@@ -119,54 +124,41 @@ public class ObstaclePool {
         posX = 0;
         switch (i){
             case SINGLE:
-                for(Obstacle obstacle : obstacleList){
-                    if(!obstacle.visible){
-                        obstacle.visible = true;
-                        obstacle.y = -size;
-                        if(listener != null)
-                            posX = listener.getBallX();
-                        if(posX > 0)
-                            obstacle.x = posX;
-                        else
-                            obstacle.x = random.nextInt(w - size);
-                        break;
-                    }
+                temp = sleeping.poll();
+                if(temp != null){
+                    temp.y = -size;
+                    if(listener != null)
+                        posX = listener.getBallX();
+                    if(posX > 0)
+                        temp.x = posX;
+                    else
+                        temp.x = random.nextInt(w - size);
+
+                    awake.add(temp);
                 }
                 break;
             case DOUBLE:
-                for(Obstacle obstacle : obstacleList){
-                    if(!obstacle.visible){
-                        obstacle.visible = true;
-                        obstacle.y = -size;
-                        if(count == 0)
-                            posX = random.nextInt(w-size);
+                int tX = -1;
+                for(int j=0; j<2; j++){
+                    temp = sleeping.poll();
+                    if(temp != null){
+                        temp.y = -size;
+                        if(tX == -1)
+                            tX = random.nextInt(w-size);
                         else
-                            posX += size *3;
-                        if(posX+size>w)
-                            posX = 0;
-                        obstacle.x = posX;
-                        count += 1;
+                            tX = tX + (size * 3);
+                        if(tX > w-size){
+                            tX = random.nextInt((w-(size*3))-size);
+                        }
+                        if(tX > 0)
+                            temp.x = tX;
+                        else
+                            temp.x = random.nextInt(w - size);
+
+                        awake.add(temp);
                     }
-                    if(count == 2) break;
                 }
                 break;
-//            case TRIPPLE:
-//                for(Cone cone: coneList){
-//                    if(!cone.visible){
-//                        cone.visible = true;
-//                        cone.y = -size;
-//                        if(count == 0)
-//                            posX = random.nextInt(w-size);
-//                        else
-//                            posX += size *3;
-//                        if(posX+size>w)
-//                            posX = 0;
-//                        cone.x = posX;
-//                        count += 1;
-//                    }
-//                    if(count == 3) break;
-//                }
-//                break;
         }
     }
 
