@@ -127,7 +127,7 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
         Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
         ball = new Ball(newX,getHeight()-(radius*4),radius,true,ballBitmap,jumpHeight, speedX);
         ball.setListener(this);
-        Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.jersey);
+        Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.obsticles);
         obstaclePool = new ObstaclePool(getWidth(), getHeight(), radius, coneBitmap, topSpeed);
         obstaclePool.setListener(this);
 
