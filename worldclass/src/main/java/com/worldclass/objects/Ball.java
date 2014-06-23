@@ -107,7 +107,7 @@ public class Ball {
         canvas.rotate(rotate, ballRect.centerX(), ballRect.centerY());
         canvas.scale(upScale, upScale, x + radius, y + radius);
         canvas.drawCircle(x+radius,y+radius,radius,paint);
-        canvas.drawBitmap(ballBitmap, null, ballRect, null);
+        canvas.drawBitmap(ballBitmap, null, ballRect, paint);
     }
 
     public Rect getBounds(){

@@ -7,7 +7,7 @@ import com.worldclass.views.MyView;
  * Created by erz on 3/20/14.
  */
 public class LoopThread extends Thread {
-    private static final long FPS = 60;
+    private static final long FPS = 50;
     private static long ticksPS = 1000 / FPS;
     private boolean running = false;
     private MyView myView;

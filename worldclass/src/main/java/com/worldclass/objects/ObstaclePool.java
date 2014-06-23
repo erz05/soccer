@@ -27,6 +27,7 @@ public class ObstaclePool {
     private int columns = 5;
     private int spriteSize;
     private Obstacle temp;
+    Paint paint;
 
     private final static int SINGLE = 0;
     private final static int DOUBLE = 1;
@@ -68,6 +69,9 @@ public class ObstaclePool {
             }
             sleeping.add(obstacle);
         }
+
+        paint = new Paint();
+        paint.setAntiAlias(true);
     }
 
     public void update(int w, int h){
@@ -98,7 +102,7 @@ public class ObstaclePool {
             currentY = obstacle.y;
             currentRect.set(currentX, currentY, currentX + size, currentY + size);
             setBitmapRect(obstacle.row, obstacle.column);
-            canvas.drawBitmap(coneBitmap, bitmapRect, currentRect, null);
+            canvas.drawBitmap(coneBitmap, bitmapRect, currentRect, paint);
         }
     }
 
