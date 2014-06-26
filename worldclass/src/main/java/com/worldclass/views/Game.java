@@ -1,39 +1,40 @@
 package com.worldclass.views;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.view.GestureDetector;
+import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import com.worldclass.R;
 import com.worldclass.listeners.BallPosListener;
 import com.worldclass.listeners.GameListener;
 import com.worldclass.listeners.SoundListener;
-import com.worldclass.objects.Ball;
-import com.worldclass.objects.ObstaclePool;
+import com.worldclass.objects.Car;
 
 /**
  * Created by erz on 2/19/14.
  */
-public class Game extends MyView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, SoundListener, BallPosListener {
+public class Game extends MyView implements SoundListener, BallPosListener {
 
-    private Ball ball;
-    private ObstaclePool obstaclePool;
-    private GestureDetector detector;
+    private Car car;
     private GameListener gameListener;
     public boolean startMoving = false;
     private int countdown = 3;
     private int time = 0;
     public boolean gameStarted = false;
     private Paint paint;
-    private float y, spacing;
-    private int yards;
+    private float spacing;
 
-    private int topSpeed;
+
+    //Nascar ======================================
+    RectF outerTrack, innerTrack;
+    Paint trackPaint;
+
+    float wEight, hFourth, width;
+
+    //---------------------------------------------
 
     private float initY;
 
@@ -44,7 +45,6 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
 
     public Game(Context context) {
         super(context);
-        detector = new GestureDetector(context, this);
     }
 
     @Override
@@ -62,15 +62,6 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
                     time += 1;
                 }
             }
-
-            if(startMoving){
-                y += topSpeed;
-
-                if(y > h){
-                    y = 0;
-                    yards += 1;
-                }
-            }
         }
     }
 
@@ -78,7 +69,21 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
     public void onDraw(Canvas canvas){
         if(canvas != null){
             update(canvas.getHeight());
-            canvas.drawColor(Color.parseColor("#187E37"));
+            canvas.drawColor(Color.BLACK);
+
+            //canvas.drawOval(outerTrack, trackPaint);
+
+            //canvas.drawRect(wEight*2, hFourth, getWidth()-wEight*2, getHeight()-hFourth, trackPaint);
+            canvas.drawArc(new RectF(wEight, hFourth, wEight *3, getHeight()- hFourth), 90, 180, true, trackPaint);
+            canvas.drawArc(new RectF(getWidth()- wEight *3, hFourth, getWidth()- wEight, getHeight()- hFourth), 270, 180, true, trackPaint);
+            canvas.drawArc(new RectF(0, 0, wEight *4, getHeight()), 90, 180, true, trackPaint);
+            canvas.drawArc(new RectF(getWidth()- wEight *4, 0, getWidth(), getHeight()), 270, 180, true, trackPaint);
+
+            canvas.drawLine(wEight *2, 0, getWidth()- wEight *2, 0, trackPaint);
+            canvas.drawLine(wEight *2, getHeight(), getWidth()- wEight *2, getHeight(), trackPaint);
+            canvas.drawLine(wEight *2, hFourth, getWidth()- wEight *2, hFourth, trackPaint);
+            canvas.drawLine(wEight *2, getHeight()- hFourth, getWidth()- wEight *2, getHeight()- hFourth, trackPaint);
+
 
             if(gameStarted){
                 if(countdown > -1){
@@ -95,51 +100,43 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
             }
 
             if(paint != null)
-                canvas.drawText("Score: "+yards,spacing,spacing*2,paint);
+                canvas.drawText("Laps: 0",spacing,spacing*2,paint);
 
-            if(obstaclePool != null)
-                obstaclePool.draw(canvas, startMoving);
-            if(ball != null)
-                ball.draw(canvas);
-
-            if(obstaclePool != null && ball != null && ball.getUpScale() == 1){
-                if(obstaclePool.checkCollision(ball.getBounds())){
-                    if(gameListener != null){
-                        gameListener.onGameOver(yards);
-                    }
-                    ball.changeColor(Color.RED);
-                }
-            }
+            if(car != null)
+                car.draw(canvas);
         }
     }
 
     @Override
     public void createObjects() {
-        int radius = getHeight()/30;
-        int coneSize = getHeight()/10;
-        int jumpHeight = getHeight()/44;
-        topSpeed = getHeight()/80;
+        int radius = getHeight()/40;
 
-        float speedX = getWidth()/185;
+        wEight = getWidth()/8;
+        hFourth = getHeight()/4;
+        width = getWidth();
+
+        float speedX = getHeight()/185;
 
         int newX = getWidth()/2 - radius;
 
-        Bitmap ballBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
-        ball = new Ball(newX,getHeight()-(radius*4),radius,true,ballBitmap,jumpHeight, speedX);
-        ball.setListener(this);
-        Bitmap coneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.obsticles);
-        obstaclePool = new ObstaclePool(getWidth(), getHeight(), radius, coneBitmap, topSpeed);
-        obstaclePool.setListener(this);
+        car = new Car(newX,hFourth/2,radius,true, speedX);
 
         spacing = radius;
-        yards = 0;
-        y = 0;
+
         paint = new Paint();
-        paint.setStrokeWidth(getWidth()/200);
+        paint.setStrokeWidth(getWidth()/300);
         paint.setAntiAlias(true);
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setTextSize(getHeight()/25);
+
+        trackPaint = new Paint();
+        trackPaint.setStrokeWidth(getHeight()/100);
+        trackPaint.setAntiAlias(true);
+        trackPaint.setColor(Color.WHITE);
+        trackPaint.setStyle(Paint.Style.STROKE);
+
+        outerTrack = new RectF(0,0,getWidth(),getHeight());
     }
 
     public void setGameListener(GameListener gameListener){
@@ -153,26 +150,21 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
     @Override
     public boolean onTouchEvent(MotionEvent event){
         if(!gameListener.getIsGameOver()){
-            detector.onTouchEvent(event);
-
             switch (event.getAction()){
                 case MotionEvent.ACTION_DOWN:
-                    initY = event.getY();
+                    if(car != null) {
+                        if (event.getX() < width / 2)
+                            car.turnLeft();
+                        else
+                            car.turnRight();
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-                    float motionX = event.getX();
-                    if(event.getY() > initY){
-                        if(ball != null){
-                            float half = getWidth()/2;
-                            if(motionX  > half){
-                                ball.fling(MOVE_RIGHT, invertControls);
-                            }else if(motionX < half){
-                                ball.fling(MOVE_LEFT, invertControls);
-                            }
-                        }
+                    if(car != null){
+                        car.notTurning();
                     }
                     break;
             }
@@ -182,68 +174,19 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
     }
 
     @Override
-    public boolean onDown(MotionEvent motionEvent) {
-        return false;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent motionEvent) {
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent motionEvent) {
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent2, float v, float v2) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent motionEvent) {
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent2, float xv, float yv) {
-        return false;
-    }
-
-    @Override
     public void start(){
         super.start();
-        if(ball != null){
-            ball.changeColor(Color.BLACK);
+        if(car != null){
+            car.changeColor(Color.BLACK);
         }
         startMoving = false;
         countdown = 3;
         time = 0;
         gameStarted = true;
-        y = 0;
-        yards = 0;
     }
 
     public int getScore(){
-        return yards;
-    }
-
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent event) {
-        return false;
-    }
-
-    @Override
-    public boolean onDoubleTap(MotionEvent event) {
-        if(ball != null)
-            ball.jump();
-        return false;
-    }
-
-    @Override
-    public boolean onDoubleTapEvent(MotionEvent event) {
-        return false;
+        return 0;
     }
 
     @Override
@@ -252,9 +195,9 @@ public class Game extends MyView implements GestureDetector.OnGestureListener, G
     }
 
     @Override
-    public int getBallX() {
-        if(ball != null)
-            return ball.x;
+    public float getBallX() {
+        if(car != null)
+            return car.x;
         return -1;
     }
 }
