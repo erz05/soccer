@@ -74,10 +74,11 @@ public class Game extends MyView implements SoundListener, BallPosListener {
             //canvas.drawOval(outerTrack, trackPaint);
 
             //canvas.drawRect(wEight*2, hFourth, getWidth()-wEight*2, getHeight()-hFourth, trackPaint);
-            canvas.drawArc(new RectF(wEight, hFourth, wEight *3, getHeight()- hFourth), 90, 180, true, trackPaint);
-            canvas.drawArc(new RectF(getWidth()- wEight *3, hFourth, getWidth()- wEight, getHeight()- hFourth), 270, 180, true, trackPaint);
-            canvas.drawArc(new RectF(0, 0, wEight *4, getHeight()), 90, 180, true, trackPaint);
-            canvas.drawArc(new RectF(getWidth()- wEight *4, 0, getWidth(), getHeight()), 270, 180, true, trackPaint);
+            canvas.drawArc(new RectF(wEight, hFourth, wEight *3, getHeight()- hFourth), 90, 180, false, trackPaint);
+            canvas.drawArc(new RectF(getWidth()- wEight *3, hFourth, getWidth()- wEight, getHeight()- hFourth), 270, 180, false, trackPaint);
+
+            canvas.drawArc(new RectF(0, 0, wEight *4, getHeight()), 90, 180, false, trackPaint);
+            canvas.drawArc(new RectF(getWidth()- wEight *4, 0, getWidth(), getHeight()), 270, 180, false, trackPaint);
 
             canvas.drawLine(wEight *2, 0, getWidth()- wEight *2, 0, trackPaint);
             canvas.drawLine(wEight *2, getHeight(), getWidth()- wEight *2, getHeight(), trackPaint);
@@ -102,8 +103,21 @@ public class Game extends MyView implements SoundListener, BallPosListener {
             if(paint != null)
                 canvas.drawText("Laps: 0",spacing,spacing*2,paint);
 
-            if(car != null)
+            if(car != null) {
                 car.draw(canvas);
+
+                RectF oval = new RectF(wEight, hFourth, wEight *3, getHeight()- hFourth);
+
+                double xDif = car.carRect.centerX() - oval.centerX();
+                double yDif = car.carRect.centerY() - oval.centerY();
+                double distanceSquared = xDif * xDif + yDif * yDif;
+                boolean collision = distanceSquared < (car.diameter + oval.width()/2) * (car.diameter + oval.width()/2);
+
+                if(collision || car.y < 0 || (car.y + car.diameter)>getHeight() || car.carRect.intersect(new RectF(wEight*2, hFourth, getWidth()-wEight*2, getHeight()-hFourth))){
+                    car.speed = 0;
+                    gameListener.onGameOver(0);
+                }
+            }
         }
     }
 

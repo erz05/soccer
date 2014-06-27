@@ -18,11 +18,14 @@ public class Car {
     public float diameter;
     public boolean alive;
     //private float veloX = 0;
-    private RectF carRect;
+    public RectF carRect;
     private float upScale = 1;
     private Paint paint;
     private float speedX = -5;
     private float speedY = 0;
+
+    public float speed;
+
     private float rotate = 180;
 
     final int NOT_TURNING = 101;
@@ -32,12 +35,14 @@ public class Car {
     int turning = NOT_TURNING;
 
 
-    public Car(float x, float y, float radius, boolean alive, float speedx){
+    public Car(float x, float y, float radius, boolean alive, float speed){
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.alive = alive;
         this.diameter = radius * 2;
+        this.speed = speed;
+        this.speedX = -speed;
         //this.speedx = speedx;
 
         carRect = new RectF();
@@ -50,8 +55,8 @@ public class Car {
 
     private void update(int width, int height){
 
-        speedX = (float)(5*(Math.cos(Math.toRadians(rotate%360))));
-        speedY = (float)(5*(Math.sin(Math.toRadians(rotate%360))));
+        speedX = (float)(speed*(Math.cos(Math.toRadians(rotate%360))));
+        speedY = (float)(speed*(Math.sin(Math.toRadians(rotate%360))));
 
         x += speedX;
 
@@ -65,13 +70,13 @@ public class Car {
             x = width-diameter;
         }
 
-        if(y<0){
-            y = 0;
-        }
-
-        if(y>height-diameter){
-            y = height-diameter;
-        }
+//        if(y<0){
+//            y = 0;
+//        }
+//
+//        if(y>height-diameter){
+//            y = height-diameter;
+//        }
 
         switch (turning){
             case NOT_TURNING:
