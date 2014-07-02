@@ -4,53 +4,40 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
-
-import com.worldclass.activities.MainActivity;
 
 /**
  * Created by erz on 2/19/14.
  */
 public class Car {
 
-    public float x, y;
-    public float radius;
-    public float diameter;
+    public float x, y, size;
     public boolean alive;
-    //private float veloX = 0;
     public RectF carRect;
-    private float upScale = 1;
     private Paint paint;
     private float speedX = -5;
     private float speedY = 0;
-
     public float speed;
-
     private float rotate = 180;
 
     final int NOT_TURNING = 101;
     final int TURNING_LEFT = 202;
     final int TURNING_RIGHT = 303;
-
     int turning = NOT_TURNING;
 
-
-    public Car(float x, float y, float radius, boolean alive, float speed){
+    public Car(float x, float y, float size, boolean alive, float speed){
         this.x = x;
         this.y = y;
-        this.radius = radius;
+        this.size = size;
         this.alive = alive;
-        this.diameter = radius * 2;
         this.speed = speed;
         this.speedX = -speed;
-        //this.speedx = speedx;
 
         carRect = new RectF();
 
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setColor(Color.WHITE);
+        paint.setColor(Color.RED);
     }
 
     private void update(int width, int height){
@@ -61,22 +48,6 @@ public class Car {
         x += speedX;
 
         y += speedY;
-
-        if(x<0){
-            x = 0;
-        }
-
-        if(x>width-diameter){
-            x = width-diameter;
-        }
-
-//        if(y<0){
-//            y = 0;
-//        }
-//
-//        if(y>height-diameter){
-//            y = height-diameter;
-//        }
 
         switch (turning){
             case NOT_TURNING:
@@ -93,8 +64,9 @@ public class Car {
     public void draw(Canvas canvas){
         update(canvas.getWidth(), canvas.getHeight());
 
-        carRect.set(x, y, x + diameter, y + diameter);
+        carRect.set(x, y, x + size, y + size);
         canvas.rotate(rotate, carRect.centerX(), carRect.centerY());
+        //canvas.drawOval(carRect, paint);
         canvas.drawRect(carRect, paint);
     }
 

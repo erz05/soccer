@@ -156,8 +156,6 @@ public class MainActivity extends Activity implements MenuListener, GameListener
     }
 
     public void restartGame() {
-        isGameOver = false;
-        menuShower(MENU_CLOSE,0,0);
         FrameLayout gameFrame = (FrameLayout) findViewById(R.id.gameFrame);
         if(game != null){
             gameFrame.removeView(game);
@@ -172,33 +170,37 @@ public class MainActivity extends Activity implements MenuListener, GameListener
             gameFrame.addView(game);
             game.start();
         }
+        menuShower(MENU_CLOSE,0,0);
+        isGameOver = false;
     }
 
     @Override
     public void onGameOver(final int score) {
-        playSound(MusicPlayer.SOUND_HIT);
-        isGameOver = true;
-        if(game != null){
-            game.gameStarted = false;
-        }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(!paused){
-                    paused = true;
+        if(!isGameOver) {
+            playSound(MusicPlayer.SOUND_HIT);
+            isGameOver = true;
+            if (game != null) {
+                game.gameStarted = false;
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!paused) {
+                        paused = true;
 
-                    SharedPreferences settings = getSharedPreferences(PREFS,0);
-                    int highScore = settings.getInt("highScore", 0);
-                    menuShower(MENU_END, score, highScore);
+                        SharedPreferences settings = getSharedPreferences(PREFS, 0);
+                        int highScore = settings.getInt("highScore", 0);
+                        menuShower(MENU_END, score, highScore);
 
-                    if(score > highScore){
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putInt("highScore", score);
-                        editor.commit();
+                        if (score > highScore) {
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putInt("highScore", score);
+                            editor.commit();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     public void onGameResume() {
