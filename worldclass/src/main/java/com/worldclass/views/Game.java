@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
-import com.worldclass.listeners.BallPosListener;
 import com.worldclass.listeners.GameListener;
 import com.worldclass.listeners.SoundListener;
 import com.worldclass.objects.Car;
@@ -17,47 +16,22 @@ import java.util.LinkedList;
 /**
  * Created by erz on 2/19/14.
  */
-public class Game extends MyView implements SoundListener, BallPosListener {
+public class Game extends MyView implements SoundListener {
 
     private Car car;
     private GameListener gameListener;
-    public boolean startMoving = false;
-    private int countdown = 3;
-    private int time = 0;
-    public boolean gameStarted = false;
     private Paint paint;
-    private float spacing;
-    int i;
-
     final int CHECK1 = 101;
     final int CHECK2 = 202;
     final int CHECK3 = 303;
     final int CHECK4 = 404;
     int laps = 0;
     int check = CHECK2;
-
-    //Nascar ======================================
-    RectF outerTrack, innerTrack;
     Paint trackPaint;
-
-    float wEight, hFourth, width, height;
+    float wEight, hFourth, width, height, speed, finishSize, strokeWidth;
     RectF inner, outter, arc1, arc2, arc3, arc4, rcheck1, rcheck2, rcheck3, rcheck4;
-
     LinkedList<RectF> finishLine = new LinkedList<RectF>();
-
     private Paint finishPaint;
-
-    float finishSize;
-    float speed;
-
-    //---------------------------------------------
-
-    private float initY;
-
-    public final static int MOVE_LEFT = 0;
-    public final static int MOVE_RIGHT = 1;
-
-    private boolean invertControls;
 
     public Game(Context context) {
         super(context);
@@ -68,23 +42,9 @@ public class Game extends MyView implements SoundListener, BallPosListener {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    private void update(float h){
-        if(gameStarted){
-            if(countdown > -1){
-                if(time > 30){
-                    countdown -= 1;
-                    time = 0;
-                }else {
-                    time += 1;
-                }
-            }
-        }
-    }
-
     @Override
     public void onDraw(Canvas canvas){
         if(canvas != null){
-            //update(height);
             canvas.drawColor(Color.BLACK);
 
             canvas.drawArc(arc1, 90, 180, false, trackPaint);
@@ -92,28 +52,14 @@ public class Game extends MyView implements SoundListener, BallPosListener {
             canvas.drawArc(arc3, 90, 180, false, trackPaint);
             canvas.drawArc(arc4, 270, 180, false, trackPaint);
 
-            canvas.drawLine(arc1.centerX(), 0, arc2.centerX(), 0, trackPaint);
-            canvas.drawLine(arc1.centerX(), height, arc2.centerX(), height, trackPaint);
-            canvas.drawLine(arc1.centerX(), hFourth, arc2.centerX(), hFourth, trackPaint);
-            canvas.drawLine(arc1.centerX(), height- hFourth, arc2.centerX(), height- hFourth, trackPaint);
+            canvas.drawLine(arc1.centerX(), strokeWidth/2, arc2.centerX(), strokeWidth/2, trackPaint);
+            canvas.drawLine(arc1.centerX(), height-strokeWidth/2, arc2.centerX(), height-strokeWidth/2, trackPaint);
+            canvas.drawLine(arc1.centerX(), hFourth+strokeWidth/2, arc2.centerX(), hFourth+strokeWidth/2, trackPaint);
+            canvas.drawLine(arc1.centerX(), height- hFourth-strokeWidth/2, arc2.centerX(), height- hFourth-strokeWidth/2, trackPaint);
 
             for(RectF rect: finishLine){
                 canvas.drawRect(rect, finishPaint);
             }
-
-            /*if(gameStarted){
-                if(countdown > -1){
-                    if(countdown > 0){
-                        if(paint != null)
-                            canvas.drawText(""+countdown, width/2 - ((paint.measureText(""+countdown))/2), height/2, paint);
-                    }else {
-                        if(paint != null)
-                            canvas.drawText("GO!", width/2 - ((paint.measureText("GO!"))/2), height/2, paint);
-                    }
-                }else {
-                    startMoving = true;
-                }
-            }*/
 
             if(paint != null)
                 canvas.drawText("Laps: "+laps,width/2,height/2,paint);
@@ -185,7 +131,7 @@ public class Game extends MyView implements SoundListener, BallPosListener {
         width = getWidth();
         height = getHeight();
         float size = height/20;
-
+        strokeWidth = height/100;
         wEight = width/8;
         hFourth = height/4;
         finishSize = hFourth/7;
@@ -196,18 +142,16 @@ public class Game extends MyView implements SoundListener, BallPosListener {
 
         car = new Car(newX,hFourth/2 - size/2 ,size,true, speed);
 
-        spacing = size;
-
         paint = new Paint();
         paint.setStrokeWidth(getWidth()/400);
         paint.setAntiAlias(true);
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setTextSize(getHeight()/20);
+        paint.setTextSize(getHeight()/10);
         paint.setTextAlign(Paint.Align.CENTER);
 
         trackPaint = new Paint();
-        trackPaint.setStrokeWidth(getHeight()/100);
+        trackPaint.setStrokeWidth(strokeWidth);
         trackPaint.setAntiAlias(true);
         trackPaint.setColor(Color.WHITE);
         trackPaint.setStyle(Paint.Style.STROKE);
@@ -217,12 +161,12 @@ public class Game extends MyView implements SoundListener, BallPosListener {
         finishPaint.setColor(Color.WHITE);
         finishPaint.setStyle(Paint.Style.FILL);
 
-        outerTrack = new RectF(0,0,getWidth(),getHeight());
+        float spacing = strokeWidth/2;
 
-        arc1 = new RectF(wEight, hFourth, wEight+(hFourth*2), hFourth*3);
-        arc2 = new RectF(width- wEight *3, hFourth, (width-wEight*3)+(hFourth*2), hFourth*3);
-        arc3 = new RectF(0, 0, height, height);
-        arc4 = new RectF(width- height, 0, width, height);
+        arc1 = new RectF(wEight+spacing, hFourth+spacing, wEight+(hFourth*2)-spacing, hFourth*3-spacing);
+        arc2 = new RectF(width- wEight *3+spacing, hFourth+spacing, (width-wEight*3)+(hFourth*2)-spacing, hFourth*3-spacing);
+        arc3 = new RectF(spacing, spacing, height-spacing, height-spacing);
+        arc4 = new RectF(width-height+spacing, 0, width-spacing, height);
         inner = new RectF(arc1.centerX(), hFourth, arc2.centerX(), height-hFourth);
         outter = new RectF(arc1.centerX(), size, arc2.centerX(), height-size);
 
@@ -253,7 +197,6 @@ public class Game extends MyView implements SoundListener, BallPosListener {
     }
 
     public void setOptions(boolean invertControls){
-        this.invertControls = invertControls;
     }
 
     @Override
@@ -288,10 +231,6 @@ public class Game extends MyView implements SoundListener, BallPosListener {
         if(car != null){
             car.changeColor(Color.BLACK);
         }
-        startMoving = false;
-        countdown = 3;
-        time = 0;
-        gameStarted = true;
     }
 
     public int getScore(){
@@ -301,12 +240,5 @@ public class Game extends MyView implements SoundListener, BallPosListener {
     @Override
     public void playSound(int sound) {
         gameListener.playSound(sound);
-    }
-
-    @Override
-    public float getBallX() {
-        if(car != null)
-            return car.x;
-        return -1;
     }
 }

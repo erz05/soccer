@@ -179,9 +179,6 @@ public class MainActivity extends Activity implements MenuListener, GameListener
         if(!isGameOver) {
             playSound(MusicPlayer.SOUND_HIT);
             isGameOver = true;
-            if (game != null) {
-                game.gameStarted = false;
-            }
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
