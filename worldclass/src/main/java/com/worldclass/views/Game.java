@@ -43,7 +43,7 @@ public class Game extends MyView implements SoundListener {
     }
 
     @Override
-    public void onDraw(Canvas canvas){
+    public void draw(Canvas canvas){
         if(canvas != null){
             canvas.drawColor(Color.BLACK);
 
@@ -164,9 +164,9 @@ public class Game extends MyView implements SoundListener {
         float spacing = strokeWidth/2;
 
         arc1 = new RectF(wEight+spacing, hFourth+spacing, wEight+(hFourth*2)-spacing, hFourth*3-spacing);
-        arc2 = new RectF(width- wEight *3+spacing, hFourth+spacing, (width-wEight*3)+(hFourth*2)-spacing, hFourth*3-spacing);
+        arc2 = new RectF(width - wEight + spacing - (hFourth*2), hFourth+spacing, width-wEight-spacing, hFourth*3-spacing);
         arc3 = new RectF(spacing, spacing, height-spacing, height-spacing);
-        arc4 = new RectF(width-height+spacing, 0, width-spacing, height);
+        arc4 = new RectF(width-height+spacing, spacing, width-spacing, height-spacing);
         inner = new RectF(arc1.centerX(), hFourth, arc2.centerX(), height-hFourth);
         outter = new RectF(arc1.centerX(), size, arc2.centerX(), height-size);
 

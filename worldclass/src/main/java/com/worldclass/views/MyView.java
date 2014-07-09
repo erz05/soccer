@@ -22,12 +22,6 @@ public abstract class MyView extends SurfaceView implements SurfaceHolder.Callba
             holder.addCallback(this);
     }
 
-    @Override
-    public void onDraw(Canvas canvas){
-        
-    }
-
-
     public abstract void createObjects();
 
     @Override

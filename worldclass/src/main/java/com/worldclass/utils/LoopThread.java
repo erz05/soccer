@@ -7,7 +7,7 @@ import com.worldclass.views.MyView;
  * Created by erz on 3/20/14.
  */
 public class LoopThread extends Thread {
-    private static final long FPS = 60;
+    private static final long FPS = 40;
     private static long ticksPS = 1000 / FPS;
     private boolean running = false;
     private MyView myView;
@@ -34,7 +34,7 @@ public class LoopThread extends Thread {
             try {
                 c = myView.getHolder().lockCanvas();
                 synchronized (myView.getHolder()) {
-                    myView.onDraw(c);
+                    myView.draw(c);
                 }
             } finally {
                 if (c != null) {
