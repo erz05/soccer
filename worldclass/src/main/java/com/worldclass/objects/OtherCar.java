@@ -6,10 +6,9 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 /**
- * Created by erz on 2/19/14.
+ * Created by erz on 7/11/2014.
  */
-public class Car {
-
+public class OtherCar {
     public float x, y, size;
     public boolean alive;
     public RectF carRect;
@@ -24,20 +23,20 @@ public class Car {
     final int TURNING_RIGHT = 303;
     int turning = NOT_TURNING;
 
-    public Car(float x, float y, float size, boolean alive, float speed){
+    public OtherCar(float x, float y, float size, boolean alive, float speed){
         this.x = x;
         this.y = y;
         this.size = size;
         this.alive = alive;
-        this.speed = speed;
-        this.speedX = -speed;
+        this.speed = speed/2;
+        this.speedX = -speed/2;
 
         carRect = new RectF();
 
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setColor(Color.RED);
+        paint.setColor(Color.GREEN);
     }
 
     private void update(int width, int height){
@@ -65,24 +64,8 @@ public class Car {
         update(canvas.getWidth(), canvas.getHeight());
 
         carRect.set(x, y, x + size, y + size);
-        canvas.rotate(rotate, carRect.centerX(), carRect.centerY());
+       // canvas.rotate(rotate, carRect.centerX(), carRect.centerY());
         //canvas.drawOval(carRect, paint);
         canvas.drawRect(carRect, paint);
-    }
-
-    public void turnLeft(){
-        turning = TURNING_LEFT;
-    }
-
-    public void turnRight(){
-        turning = TURNING_RIGHT;
-    }
-
-    public void changeColor(int color){
-        paint.setColor(color);
-    }
-
-    public void notTurning() {
-        turning = NOT_TURNING;
     }
 }

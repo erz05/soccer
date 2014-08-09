@@ -1,7 +1,6 @@
 package com.worldclass.views;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 

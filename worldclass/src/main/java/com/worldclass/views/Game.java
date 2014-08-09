@@ -5,11 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.worldclass.listeners.GameListener;
 import com.worldclass.listeners.SoundListener;
 import com.worldclass.objects.Car;
+import com.worldclass.objects.OtherCar;
 
 import java.util.LinkedList;
 
@@ -32,6 +34,8 @@ public class Game extends MyView implements SoundListener {
     RectF inner, outter, arc1, arc2, arc3, arc4, rcheck1, rcheck2, rcheck3, rcheck4;
     LinkedList<RectF> finishLine = new LinkedList<RectF>();
     private Paint finishPaint;
+
+    OtherCar otherCar;
 
     public Game(Context context) {
         super(context);
@@ -63,6 +67,10 @@ public class Game extends MyView implements SoundListener {
 
             if(paint != null)
                 canvas.drawText("Laps: "+laps,width/2,height/2,paint);
+
+            if(otherCar != null){
+                otherCar.draw(canvas);
+            }
 
             if(car != null) {
                 car.draw(canvas);
@@ -103,7 +111,7 @@ public class Game extends MyView implements SoundListener {
                         if(pass) {
                             check = CHECK2;
                             laps += 1;
-                            car.speed += .5;
+                            car.speed += 1;
                         }
                         break;
                     case CHECK2:
@@ -136,11 +144,14 @@ public class Game extends MyView implements SoundListener {
         hFourth = height/4;
         finishSize = hFourth/7;
 
-        speed = height/185;
+        speed = height/100;
+
+        Log.v("DELETE_THIS", "speed = "+speed);
 
         float newX = width/2 + size + finishSize;
 
         car = new Car(newX,hFourth/2 - size/2 ,size,true, speed);
+        otherCar = new OtherCar(newX, hFourth/2-size/2, size, true, speed);
 
         paint = new Paint();
         paint.setStrokeWidth(getWidth()/400);
@@ -196,8 +207,7 @@ public class Game extends MyView implements SoundListener {
         this.gameListener = gameListener;
     }
 
-    public void setOptions(boolean invertControls){
-    }
+    public void setOptions(boolean invertControls){}
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
